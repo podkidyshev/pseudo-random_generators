@@ -1,6 +1,7 @@
 import os
 import sys
 import argparse
+import time
 
 import launch
 import generators
@@ -62,17 +63,6 @@ def handle_usage(args):
     sys.exit(0)
 
 
-def handle_gen(args: list):
-    if '--g' in args:
-        gen_name = args[args.index('--g') + 1]
-        args.remove('--g')
-        args.remove(gen_name)
-        print('Выбран генератор {}'.format(gen_name) + generators.SEPARATOR)
-        return gen_name
-
-    return launch.rand_gen()
-
-
 def handle_file(params):
     if params.f:
         filename = params.f
@@ -90,13 +80,15 @@ def parse_args():
     args = handle_windows_style()
     # Костыль 2
     handle_usage(args)
-    gen_name = handle_gen(args)
+    # Костыль 3
+    gen_name = launch.handle_gen(args)
 
     parser = argparse.ArgumentParser()
+    parser.add_argument('--g', type=str)
     parser.add_argument('--i', type=int, nargs='*', default=None)
     parser.add_argument('--n', type=int, default=DEFAULT_LEN)
     parser.add_argument('--f', type=str)
-    parser.add_argument('-u', '--gui', action='store_true')
+    parser.add_argument('--gui', action='store_true')
 
     launch.init_parser(parser, gen_name)
 
@@ -109,8 +101,11 @@ def main():
     gen = launch.GENS_DICT[gen_name](params)
 
     print('Будет сгенерировано {} чисел'.format(params.n) + generators.SEPARATOR)
+    time_start = time.time()
     values = [next(gen) % 1000 for _idx in range(params.n)]
+    time_elapsed = int((time.time() - time_start) * 1000)
     print('Генерация прошла успешно' + generators.SEPARATOR)
+    print('Генарация заняла {} милисекунд'.format(time_elapsed))
 
     filaname = handle_file(params)
     with open(filaname, 'w') as f:

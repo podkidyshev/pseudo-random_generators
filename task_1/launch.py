@@ -17,9 +17,14 @@ GENS_DICT = {'lc': GenLC, 'add': GenAdd, '5p': Gen5p, 'lfsr': GenLFSR, 'nfsr': G
              }
 
 
-def rand_gen():
+def handle_gen(args: list):
+    if '--g' in args:
+        gen_name = args[args.index('--g') + 1]
+        print('Выбран генератор {}'.format(gen_name) + generators.SEPARATOR)
+        return gen_name
+
     gen_name = random.choice(list(GENS_DICT.keys()))
-    print('Случайно выбран генератор {}'.format(gen_name) + generators.SEPARATOR)
+    print('Случайным образом выбран генератор {}'.format(gen_name) + generators.SEPARATOR)
     return gen_name
 
 
