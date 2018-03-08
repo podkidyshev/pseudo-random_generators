@@ -7,7 +7,7 @@ sys.setrecursionlimit(10000)
 
 
 a = Analysis(['main.py'],
-             pathex=['D:\\Projects\\SSUGenerators\\task_1'],
+             pathex=['D:\\Projects\\SSUGenerators\\task_2'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -24,7 +24,7 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='generators',
+          name='distribs',
           debug=False,
           strip=False,
           upx=True,
