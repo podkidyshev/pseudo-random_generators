@@ -22,47 +22,6 @@ def handle_windows_style():
     return args
 
 
-def handle_usage(args):
-    if '--h' not in args:
-        return
-    if args.index('--h') == len(args) - 1 or args[args.index('--h') + 1][:2] == '--':
-        s = """Возможные параметры:
-        
-/h - получение справки о работе программы
-/h:<gen> получение справки о генераторе gen
-Возможные значения gen: {}
-
-/n:<count> количество генерируемых чисел, по умолчанию 10000
-
-/g:<gen> выбор генератора из списка (по умолчанию веберется случайно)
-
-/i:<i1 i2...> инициализационный вектор. Может содержать несколько значений 
-Каждое значение после первого вводится далее через пробел в сторогом порядке. 
-Количество значений для каждого генератора фиксировано
-Для подробной справки о векторе для каждого генератора смотрите в /h<gen>
-Каждый генератор может сам сгенерировать подходящий вектор
-
-/f: файл для записи сгенерированных чисел. По умолчанию запись ведется в rnd.dat в каталоге запуска процесса
-Возможно введение как абсолютного, так и относительного пути для файла
-
-/<a>:<a_v> - каждый генератор имеет свои параметры. Для справки по ним введите /h:gen
-ВСЕ параметры генераторов - числа. Если требуется полином над GF(2) - введите его эквивалент в десятичной форме (число)
-""".format(', '.join(launch.GENS_DICT.keys()))
-        print(s)
-    else:
-        gen_name = args[args.index('--h') + 1]
-        if gen_name in launch.GENS_DICT.keys():
-            gen_class = launch.GENS_DICT[gen_name]
-            print("Описание генератора {} ({}):".format(gen_name, gen_class.NAME) + generators.SEPARATOR)
-            print("Возможные параметры: {}".format(', '.join(launch.GENS_DICT[gen_name].PARAMS)))
-            print(generators.SEPARATOR[1:], end='')
-            launch.GENS_DICT[gen_name].usage()
-        else:
-            raise Exception('Неизвестное значение параметра для h: выберите одно из: {}'
-                            .format(', '.join(launch.GENS_DICT.keys())))
-    sys.exit(0)
-
-
 def handle_file(params):
     if params.f:
         filename = params.f
@@ -79,7 +38,7 @@ def parse_args():
     # Костыль 1
     args = handle_windows_style()
     # Костыль 2
-    handle_usage(args)
+    launch.handle_usage(args)
     # Костыль 3
     gen_name = launch.handle_gen(args)
 
