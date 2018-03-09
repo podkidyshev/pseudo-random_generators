@@ -1,5 +1,5 @@
 from sympy.ntheory import factorint, isprime
-from fractions import gcd
+from math import gcd
 
 from generators import *
 
@@ -22,7 +22,8 @@ class GenRSA(Gen):
         assert 1 <= self.w, 'ограничение 1 <= w'
         assert isprime(self.p), 'p должно быть простым положительным числом'
         assert isprime(self.q), 'q должно быть простым положительным числом'
-        if params.rsa_n or params.rsa_e: GenRSA.check_e(GenRSA.check_n(self.n), self.e)
+        self.p, self.q = GenRSA.assert_n(self.n)
+        GenRSA.assert_e(self.p, self.q, self.e)
         # инициализационный вектор
         self.x0 = Gen.extract_param_vec(params, 0, Gen.gen_param, (1, self.n - 1), 'x0') % self.n
 
@@ -46,16 +47,16 @@ class GenRSA(Gen):
         return e
 
     @staticmethod
-    def check_n(n):
+    def assert_n(n):
         factors = tuple(factorint(n).keys())
         assert len(factors) == 2, 'rsa_n должно быть произведением двух простых чисел'
         assert isprime(factors[0]) and isprime(factors[1]), 'множители n должны быть простыми: {} и {}'.format(*factors)
         return factors[0], factors[1]
 
     @staticmethod
-    def check_e(pq, e):
-        assert e < (pq[0] - 1) * (pq[1] - 1), 'e должно быть строго меньше (p - 1)(q - 1)'
-        assert gcd(e, (pq[0] - 1) * (pq[1] - 1)) == 1, 'e и (p - 1)(q - 1) должны быть взаимно простыми'
+    def assert_e(p, q, e):
+        assert e < (p - 1) * (q - 1), 'e должно быть строго меньше (p - 1)(q - 1)'
+        assert gcd(e, (p - 1) * (q - 1)) == 1, 'e и (p - 1)(q - 1) должны быть взаимно простыми'
 
     @staticmethod
     def gen_prime(name, primes):

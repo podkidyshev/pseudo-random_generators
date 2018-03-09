@@ -1,8 +1,9 @@
+import os
 import sys
 import random
 import argparse
 
-import generators
+from generators import SEPARATOR
 from generators.gen_5p import Gen5p
 from generators.gen_add import GenAdd
 from generators.gen_bbs import GenBBS
@@ -26,15 +27,30 @@ GENS_DICT = {
     'rsa': GenRSA,
 }
 
+DEFAULT_FILE = 'rnd.dat'
+
+
+def handle_windows_style():
+    args = sys.argv[1:]
+    for idx, arg in enumerate(args):
+        if '/' in arg:
+            arg = arg.replace('/', '--')
+            if ':' in arg:
+                args.insert(idx + 1, arg[arg.index(':') + 1:])
+                arg = arg[:arg.index(':')]
+            args[idx] = arg
+
+    return args
+
 
 def handle_gen(args: list):
     if '--g' in args:
         gen_name = args[args.index('--g') + 1]
-        print('Выбран генератор {}'.format(gen_name) + generators.SEPARATOR)
+        print('Выбран генератор {}'.format(gen_name) + SEPARATOR)
         return gen_name
 
     gen_name = random.choice(list(GENS_DICT.keys()))
-    print('Случайным образом выбран генератор {}'.format(gen_name) + generators.SEPARATOR)
+    print('Случайным образом выбран генератор {}'.format(gen_name) + SEPARATOR)
     return gen_name
 
 
@@ -43,6 +59,21 @@ def init_parser(parser: argparse.ArgumentParser, gen_name: str):
 
     for param_name in params:
         parser.add_argument('--{}'.format(param_name), type=int)
+
+
+def handle_file(args, values):
+    """
+    Разбор параметра f - выходной файл со сгенерированной ПСП
+    Производит запись в файл
+    Разделитель - символ новой строки
+    """
+    filename = args.f if args.f else DEFAULT_FILE
+    line_to_default = '' if args.f else 'по умолчанию '
+    print('Запись будет производиться в файл {}{}'.format(line_to_default, filename))
+
+    with open(os.path.abspath(filename), 'w') as file_out:
+        file_out.write('\n'.join(map(str, values)))
+    print('Последовательность успешно записана')
 
 
 def handle_usage(args):

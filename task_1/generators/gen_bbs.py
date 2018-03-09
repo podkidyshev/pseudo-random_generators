@@ -1,12 +1,12 @@
 from sympy.ntheory import factorint, isprime
-from fractions import gcd
+from math import gcd
 
 from generators import *
 
 
 class GenBBS(Gen):
     NAME = 'Алгоритм Блюма-Блюма-Шуба'
-    PARAMS = ['p', 'q', 'bbs_n', 'bbs_x', 'w']
+    PARAMS = ['p', 'q', 'bbs_n', 'w']
 
     def __init__(self, params):
         # ассерты
@@ -15,15 +15,16 @@ class GenBBS(Gen):
         self.p = Gen.extract_param(params, 'p', GenBBS.gen_blum_factor, 'p', GenBBS.big)
         self.q = Gen.extract_param(params, 'q', GenBBS.gen_blum_factor, 'q', GenBBS.small)
         self.n = Gen.extract_param(params, 'bbs_n', lambda: self.p * self.q)
-        self.x = Gen.extract_param(params, 'bbs_x', GenBBS.gen_relatively_prime, self.n, 'x')
+
         self.w = Gen.extract_param(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
         # ассерты
         assert 1 <= self.w, 'ограничение 1 <= w'
         assert isprime(self.p) and self.p % 4 == 3, 'p не простое или % 3 != 4'
         assert isprime(self.q) and self.q % 4 == 3, 'q не простое или % 3 != 4'
-        if params.bbs_n or params.bbs_x: assert GenBBS.check_n(self.n) and gcd(self.n, self.x) == 1, \
-            'bbs_n и bbs_x должны быть взаимно простыми'
+        self.p, self.q = GenBBS.check_n(self.n)
         # инициализационный вектор
+        self.x = Gen.extract_param_vec(params, 0, GenBBS.gen_relatively_prime, self.n, 'x')
+        assert gcd(self.n, self.x) == 1, 'bbs_n = {} и x = {} должны быть взаимно простыми'.format(self.n, self.x)
         self.x0 = pow(self.x, 2, self.n)
 
         super().__init__()
@@ -52,25 +53,15 @@ class GenBBS(Gen):
 
     @staticmethod
     def gen_relatively_prime(f, name):
-        res = GenBBS._gen_relatively_prime(f)
-        Gen.print_genned_param(name, res)
-        return res
-
-    @staticmethod
-    def _gen_relatively_prime(f):
         factors = set(factorint(f).keys())
-        possible_factors = [factor for factor in GenBBS.big + GenBBS.small if factor < f and f not in factors]
-        if not possible_factors:
-            return f - 1
+        possible_factors = [factor for factor in GenBBS.big + GenBBS.small if f not in factors]
 
-        e = 1
+        x = 1
+        for idx in range(4):
+            x *= random.choice(possible_factors)
 
-        while e < f:
-            next_prime = random.choice(possible_factors)
-            if next_prime * e > f:
-                break
-            e *= next_prime
-        return e
+        Gen.print_genned_param(name, x)
+        return x
 
     small = [3, 7, 11, 19, 23, 31, 43, 47, 59, 67, 71, 79, 83, 103, 107, 127, 131, 139, 151, 163, 167, 179, 191, 199,
              211, 223, 227, 239, 251, 263, 271, 283, 307, 311, 331, 347, 359, 367, 379, 383, 419, 431, 439, 443, 463,
@@ -83,8 +74,11 @@ class GenBBS(Gen):
     def usage():
         usage = """
 w - длина выходного слова - > 0
-p и q - простые числа % 3 == 4
-bbs_n - число Блюма
-bbs_x - число, взаимно-простое с bbs_n
+p и q - целые числа Блюма (простые числа с % 3 == 4)
+bbs_n - произведение двух чисел Блюма
+
+Инициализационный вектор:
+
+x - число, взаимно-простое с bbs_n
 """
         print(usage)
