@@ -1,5 +1,5 @@
 from math import log
-from distributions import *
+from task_2.distributions import *
 
 
 class DistLS(Dist):

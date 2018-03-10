@@ -1,4 +1,4 @@
-from generators import *
+from task_1.generators import *
 
 
 class GenLFSR(Gen):

@@ -1,8 +1,8 @@
 import argparse
 import time
 
-import launch
-from generators import SEPARATOR
+from task_1.launch import *
+from task_1.generators import SEPARATOR
 
 DEFAULT_LEN = 10000
 DEFAULT_PLOT_MAX_VALUES = 200
@@ -10,11 +10,11 @@ DEFAULT_PLOT_MAX_VALUES = 200
 
 def parse_args():
     # Костыль 1
-    args = launch.handle_windows_style()
+    args = handle_windows_style()
     # Костыль 2
-    launch.handle_usage(args)
+    handle_usage(args)
     # Костыль 3
-    gen_name = launch.handle_gen(args)
+    gen_name = handle_gen(args)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--g', type=str)
@@ -23,14 +23,14 @@ def parse_args():
     parser.add_argument('--f', type=str)
     parser.add_argument('--gui', action='store_true')
 
-    launch.init_parser(parser, gen_name)
+    init_parser(parser, gen_name)
 
     return gen_name, parser.parse_args(args)
 
 
 def generate(gen_name, args):
     print('Инициализация генератора {}'.format(gen_name) + SEPARATOR)
-    gen = launch.GENS_DICT[gen_name](args)
+    gen = GENS_DICT[gen_name](args)
 
     print('Будет сгенерировано {} чисел'.format(args.n))
     time_start = time.time()
@@ -56,7 +56,7 @@ def main():
     # Инициализация генератора и генерация чисел
     values = generate(gen_name, args)
     # Запись в файл
-    launch.handle_file(args, values)
+    handle_file(args, values)
     # Построение графика сгенерированных значений
     plot(args, values)
 

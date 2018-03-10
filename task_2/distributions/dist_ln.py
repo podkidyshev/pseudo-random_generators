@@ -1,5 +1,5 @@
 from math import exp
-from distributions import *
+from task_2.distributions import *
 
 
 class DistLN(Dist):

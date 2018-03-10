@@ -1,14 +1,15 @@
 import os
 import sys
 
-from distributions.dist_st import *
-from distributions.dist_tr import *
-from distributions.dist_ex import *
-from distributions.dist_nr import *
-from distributions.dist_gm import *
-from distributions.dist_ln import *
-from distributions.dist_ls import *
-from distributions.dist_bi import *
+from task_2.distributions import *
+from task_2.distributions.dist_st import *
+from task_2.distributions.dist_tr import *
+from task_2.distributions.dist_ex import *
+from task_2.distributions.dist_nr import *
+from task_2.distributions.dist_gm import *
+from task_2.distributions.dist_ln import *
+from task_2.distributions.dist_ls import *
+from task_2.distributions.dist_bi import *
 
 DEFAULT_FILE_IN = 'rnd.dat'
 DEFAULT_FILE_OUT = 'rnd_out.dat'

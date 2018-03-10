@@ -1,5 +1,5 @@
 from math import sqrt, log, cos, pi
-from distributions import *
+from task_2.distributions import *
 
 DEFAULT_μ = (0.2, 0.8)
 DEFAULT_σ = (0, 20)

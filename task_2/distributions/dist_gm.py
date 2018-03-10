@@ -1,4 +1,4 @@
-from distributions import *
+from task_2.distributions import *
 
 
 class DistGM(Dist):

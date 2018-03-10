@@ -1,7 +1,7 @@
 from sympy.ntheory import factorint, isprime
 from math import gcd
 
-from generators import *
+from task_1.generators import *
 
 
 class GenBBS(Gen):
