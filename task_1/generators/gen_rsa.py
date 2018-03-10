@@ -73,7 +73,7 @@ class GenRSA(Gen):
     @staticmethod
     def _gen_relatively_prime(f):
         factors = set(factorint(f).keys())
-        possible_factors = [factor for factor in GenRSA.big + GenRSA.small if factor < f and f not in factors]
+        possible_factors = [factor for factor in GenRSA.big + GenRSA.small if factor < f and factor not in factors]
         if not possible_factors:
             return f - 1
 

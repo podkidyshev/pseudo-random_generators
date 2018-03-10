@@ -54,10 +54,10 @@ class GenBBS(Gen):
     @staticmethod
     def gen_relatively_prime(f, name):
         factors = set(factorint(f).keys())
-        possible_factors = [factor for factor in GenBBS.big + GenBBS.small if f not in factors]
+        possible_factors = [factor for factor in GenBBS.big + GenBBS.small if factor not in factors]
 
         x = 1
-        for idx in range(4):
+        for idx in range(2):
             x *= random.choice(possible_factors)
 
         Gen.print_genned_param(name, x)

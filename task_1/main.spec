@@ -7,7 +7,7 @@ sys.setrecursionlimit(10000)
 
 
 a = Analysis(['main.py'],
-             pathex=['D:\\Projects\\SSUGenerators\\task_1'],
+             pathex=['E:\\Projects\\SSUGenerators\\task_1'],
              binaries=[],
              datas=[],
              hiddenimports=[],
