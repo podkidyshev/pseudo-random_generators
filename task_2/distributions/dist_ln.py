@@ -17,3 +17,11 @@ class DistLN(Dist):
     def transform(self, values):
         values_standard = Dist.transform_standard(values)
         return [self.a + exp(self.b - z) for z in values_standard]
+
+    @staticmethod
+    def usage():
+        s = """
+p1(a) - смещение
+p2(b) - масштаб - > 0
+"""
+        print(s)

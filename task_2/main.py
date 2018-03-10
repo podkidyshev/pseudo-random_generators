@@ -13,8 +13,9 @@ def parse_args():
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--d')
-    parser.add_argument('--p1', type=int)
-    parser.add_argument('--p2', type=int)
+    parser.add_argument('--p1', type=float)
+    parser.add_argument('--p2', type=float)
+    parser.add_argument('--p3', type=float)
     parser.add_argument('--f')
     parser.add_argument('--fout')
     parser.add_argument('--gui', action='store_true')
@@ -38,7 +39,7 @@ def transform(args, values_in):
 
 
 def plot(args, values):
-    if len(values) <= 200 and args.gui:
+    if len(values) <= 400 and args.gui:
         import matplotlib.pyplot as plt
         plt.figure()
         for idx, value in enumerate(values):

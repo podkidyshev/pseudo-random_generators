@@ -16,3 +16,13 @@ class DistEX(Dist):
         values_standard = Dist.transform_standard(values)
         values_out = [-self.b * log(value) + self.a for value in values_standard]
         return values_out
+
+    @staticmethod
+    def usage():
+        s = """
+p1(a) - левая граница интервала
+p2(b) - правая граница интервала
+
+Параметры a и b должны составлять непустой интервал (a < b)
+"""
+        print(s)

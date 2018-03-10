@@ -14,3 +14,13 @@ class DistST(Dist):
     def transform(self, values):
         values_standard = Dist.transform_standard(values)
         return [self.b * value + self.a for value in values_standard]
+
+    @staticmethod
+    def usage():
+        s = """
+p1(a) - левая граница интервала
+p2(b) - правая граница интервала
+
+Параметры a и b должны составлять непустой интервал (a < b)
+"""
+        print(s)

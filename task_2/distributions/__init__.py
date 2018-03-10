@@ -7,6 +7,7 @@ DEFAULT_INTERVAL_B = 1000
 
 DEFAULT_OFFSET_A = (-5, 5)
 DEFAULT_SCALE_B = (0.1, 5)
+DEFAULT_FORM_C = (0.5000001, 10)
 
 
 class Dist:
@@ -41,7 +42,6 @@ class Dist:
         return [value / modulo for value in values]
 
     @staticmethod
-    def separate_values(values):
-        values_0 = [values[idx] for idx in range(len(values)) if not idx % 2]
-        values_1 = [values[idx] for idx in range(len(values)) if idx % 2]
-        return values_0, values_1
+    def iter_next_pairs(values):
+        for v0, v1 in zip(values[:-1], values[1:]):
+            yield v0, v1

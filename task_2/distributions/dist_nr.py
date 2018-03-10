@@ -20,10 +20,9 @@ class DistNR(Dist):
 
     def transform(self, values):
         values_standard = Dist.transform_standard(values)
-        values_in_1, values_in_2 = Dist.separate_values(values_standard)
 
         values_out = []
-        for u1, u2 in zip(values_in_1, values_in_2):
+        for u1, u2 in Dist.iter_next_pairs(values_standard):
             z1 = self.μ + self.σ * sqrt(-2 * log(1 - u1)) * cos(2 * pi * u2)
             z2 = self.μ + self.σ * sqrt(-2 * log(1 - u2)) * cos(2 * pi * u1)
 
@@ -31,3 +30,11 @@ class DistNR(Dist):
             values_out.append(z2)
 
         return values_out
+
+    @staticmethod
+    def usage():
+        s = """
+p1(μ) - математическое ожидание - в интервале (0, 1)
+p2(σ) - среднеквадратичное отклонение - >= 0
+"""
+        print(s)

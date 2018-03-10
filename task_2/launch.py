@@ -74,6 +74,33 @@ def handle_file_out(args, values):
 
 
 def handle_usage(args):
-    if '--h' in args:
-        print("Строка о помощи")
-        sys.exit(0)
+    if '--h' not in args:
+        return
+
+    if args.index('--h') == len(args) - 1 or args[args.index('--h') + 1][:2] == '--':
+        s = """Возможные параметры:
+
+/h - получение справки о работе программы
+/h:<dist> получение справки о распределении dist
+Возможные значения gen: {}
+
+/d:<dist> выбор распределения из списка (по умолчанию веберется случайно)
+
+/p1: /p2: /p3: - параметры распределения. Для подробной справки для каждого распределения см. /h:<dist>
+Параметры для каждого распределения являются вещественными числами и могут генерироваться, если не указаны в аргументах
+
+/f: файл для чтения ПСП. По умолчанию: rnd.dat в каталоге запуска процесса
+/fout: файл для записи преобразованной ПСП. По умолчанию: rnd_out.dat в каталоге запуска процесса
+Возможно введение как абсолютного, так и относительного пути для файлов
+    """.format(', '.join(DISTS_DICT.keys()))
+        print(s)
+    else:
+        dist_name = args[args.index('--h') + 1]
+        if dist_name in DISTS_DICT.keys():
+            dist_class = DISTS_DICT[dist_name]
+            print("Описание генератора {} ({}):".format(dist_name, dist_class.NAME) + SEPARATOR, end='')
+            dist_class.usage()
+        else:
+            raise Exception('Неизвестное значение параметра для h: выберите одно из: {}'
+                            .format(', '.join(DISTS_DICT.keys())))
+    sys.exit(0)
