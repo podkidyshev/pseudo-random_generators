@@ -1,4 +1,4 @@
-from task_1.generators import *
+from generators import *
 
 
 class GenRC4(Gen):

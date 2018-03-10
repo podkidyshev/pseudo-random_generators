@@ -3,16 +3,16 @@ import sys
 import random
 import argparse
 
-from task_1.generators import SEPARATOR
-from task_1.generators.gen_5p import Gen5p
-from task_1.generators.gen_add import GenAdd
-from task_1.generators.gen_bbs import GenBBS
-from task_1.generators.gen_lc import GenLC
-from task_1.generators.gen_lfsr import GenLFSR
-from task_1.generators.gen_mt import GenMT
-from task_1.generators.gen_nfsr import GenNFSR
-from task_1.generators.gen_rc4 import GenRC4
-from task_1.generators.gen_rsa import GenRSA
+from generators import SEPARATOR
+from generators.gen_5p import Gen5p
+from generators.gen_add import GenAdd
+from generators.gen_bbs import GenBBS
+from generators.gen_lc import GenLC
+from generators.gen_lfsr import GenLFSR
+from generators.gen_mt import GenMT
+from generators.gen_nfsr import GenNFSR
+from generators.gen_rc4 import GenRC4
+from generators.gen_rsa import GenRSA
 
 
 GENS_DICT = {
@@ -107,9 +107,9 @@ def handle_usage(args):
         gen_name = args[args.index('--h') + 1]
         if gen_name in GENS_DICT.keys():
             gen_class = GENS_DICT[gen_name]
-            print("Описание генератора {} ({}):".format(gen_name, gen_class.NAME) + SEPARATOR)
+            print("Описание генератора {} ({}):".format(gen_name, gen_class.NAME) + generators.SEPARATOR)
             print("Возможные параметры: {}".format(', '.join(GENS_DICT[gen_name].PARAMS)))
-            print(SEPARATOR[1:], end='')
+            print(generators.SEPARATOR[1:], end='')
             GENS_DICT[gen_name].usage()
         else:
             raise Exception('Неизвестное значение параметра для h: выберите одно из: {}'

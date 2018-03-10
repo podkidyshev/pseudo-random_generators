@@ -1,4 +1,4 @@
-from task_2.distributions import *
+from distributions import *
 
 
 class DistST(Dist):
