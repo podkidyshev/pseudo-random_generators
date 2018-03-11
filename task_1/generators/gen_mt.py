@@ -19,9 +19,9 @@ class GenMT(Gen):
     f = 1812433253
 
     def __init__(self, params):
-        self.mask_all = (2 ** GenMT.w) - 1
-        self.mask_last = 2 ** GenMT.r
-        self.mask_first = (2 ** GenMT.r) - 1
+        self.mask_all = (1 << GenMT.w) - 1
+        self.mask_first = (1 << GenMT.r) - 1
+        self.mask_last = self.mask_all - self.mask_first
         # ассерты
         Gen.assert_i_len(params.i, 1, GenMT.NAME)
         # инициализационный вектор
@@ -41,7 +41,7 @@ class GenMT(Gen):
             y = (self.a[i] & self.mask_last) + (self.a[(i + 1) % GenMT.p] & self.mask_first)
             self.a[i] = self.a[(i + GenMT.q) % GenMT.p] ^ (y >> 1)
             if y % 2:
-                self.a[i] ^= GenMT.b
+                self.a[i] ^= GenMT.a
 
     def __next__(self):
         if self.n == 0:
