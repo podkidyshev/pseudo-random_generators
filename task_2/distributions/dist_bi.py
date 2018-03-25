@@ -1,5 +1,4 @@
 from distributions import *
-from scipy.special import comb
 
 DEFAULT_P = (0.1, 0.9)
 
@@ -23,7 +22,7 @@ class DistBI(Dist):
         for y in range(n):
             y_new = 0
             for k in range(y):
-                y_new += comb(n, k) * pow(self.p, k) * pow(1 - self.p, n - k)
+                y_new += ncr(n, k) * pow(self.p, k) * pow(1 - self.p, n - k)
             f.append(y_new)
 
         values_out = []

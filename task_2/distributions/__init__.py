@@ -1,4 +1,6 @@
 import random
+import operator as op
+from functools import reduce
 
 SEPARATOR = '\n---------------------------------'
 
@@ -8,6 +10,13 @@ DEFAULT_INTERVAL_B = 1000
 DEFAULT_OFFSET_A = (-5, 5)
 DEFAULT_SCALE_B = (0.1, 5)
 DEFAULT_FORM_C = (0.5000001, 10)
+
+
+def ncr(n, r):
+    r = min(r, n-r)
+    numer = reduce(op.mul, range(n, n-r, -1), 1)
+    denom = reduce(op.mul, range(1, r+1), 1)
+    return numer // denom
 
 
 class Dist:

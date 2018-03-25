@@ -1,7 +1,7 @@
 from math import sqrt, log, cos, pi
 from distributions import *
 
-DEFAULT_μ = (0.2, 0.8)
+DEFAULT_μ = (10, 30)
 DEFAULT_σ = (0, 20)
 
 
@@ -13,7 +13,6 @@ class DistNR(Dist):
         self.μ = Dist.extract_param(params, 'p1', Dist.gen_param, DEFAULT_μ, 'μ')
         self.σ = Dist.extract_param(params, 'p2', Dist.gen_param, DEFAULT_σ, 'σ')
         # ассерты
-        assert 0 < self.μ < 1, 'μ - математическое ожидание - должно быть в интервале (0, 1)'
         assert 0 <= self.σ, 'σ - среднеквадратичное отклонение - должно быть положительным числом'
 
         super().__init__()
@@ -34,7 +33,7 @@ class DistNR(Dist):
     @staticmethod
     def usage():
         s = """
-p1(μ) - математическое ожидание - в интервале (0, 1)
+p1(μ) - математическое ожидание
 p2(σ) - среднеквадратичное отклонение - >= 0
 """
         print(s)
