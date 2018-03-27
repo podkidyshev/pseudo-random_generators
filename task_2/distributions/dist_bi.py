@@ -21,7 +21,7 @@ class DistBI(Dist):
         n = len(values_standard)
         for y in range(n):
             y_new = 0
-            for k in range(y):
+            for k in range(1, y + 1):
                 y_new += ncr(n, k) * pow(self.p, k) * pow(1 - self.p, n - k)
             f.append(y_new)
 
