@@ -1,8 +1,11 @@
 import argparse
 import time
+import matplotlib.pyplot as plt
 
 import launch
 from distributions import SEPARATOR
+
+HIST_COUNT = 25
 
 
 def parse_args():
@@ -31,19 +34,23 @@ def transform(args, values_in):
 
     print('Старт преобразования')
     time_start = time.time()
-    values_out = dist.transform(values_in)
+    values_out, values_reference = dist.transform(values_in)
     time_elapsed = int((time.time() - time_start) * 1000)
     print('Преобразование заняло {} милисекунд'.format(time_elapsed) + SEPARATOR)
 
-    return values_out
+    return values_out, values_reference
 
 
-def plot(args, values):
-    if len(values) <= 400 and args.gui:
-        import matplotlib.pyplot as plt
-        plt.figure()
-        for idx, value in enumerate(values):
-            plt.scatter(idx, value)
+def plot(args, values, values_reference):
+    if args.gui:
+        plt.subplot(1, 2, 1)
+        plt.title('Преобразованные числа')
+        plt.hist(values, HIST_COUNT)
+
+        plt.subplot(1, 2, 2)
+        plt.title('Эталон')
+        plt.hist(values_reference, HIST_COUNT)
+
         plt.show()
 
 
@@ -53,11 +60,12 @@ def main():
     # Считывание ПСП из файла
     values_in = launch.handle_file_in(args)
     # Старт преобразования к распределению
-    values_out = transform(args, values_in)
+    values_out, values_reference = transform(args, values_in)
+    print('Длина последовательности на выходе = {}'.format(len(values_out)))
     # Запись в файл
     launch.handle_file_out(args, values_out)
     # Построение графика полученного распределения
-    plot(args, values_out)
+    plot(args, values_out, values_reference)
 
 
 if __name__ == '__main__':

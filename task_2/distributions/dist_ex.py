@@ -15,7 +15,8 @@ class DistEX(Dist):
     def transform(self, values):
         values_standard = Dist.transform_standard(values)
         values_out = [-self.b * log(value) + self.a for value in values_standard]
-        return values_out
+
+        return values_out, rnd.exponential(self.b - self.a, len(values))
 
     @staticmethod
     def usage():

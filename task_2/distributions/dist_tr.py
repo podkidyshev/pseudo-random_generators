@@ -17,7 +17,7 @@ class DistTR(Dist):
         values_out = []
         for u1, u2 in Dist.iter_next_pairs(values_in):
             values_out.append(self.a + self.b * (u1 + u2 - 1))
-        return values_out
+        return values_out, rnd.triangular(self.a, self.a + (self.b - self.a) / 2, self.b, len(values))
 
     @staticmethod
     def usage():

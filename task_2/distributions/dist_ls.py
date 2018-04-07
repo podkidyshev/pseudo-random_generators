@@ -16,7 +16,7 @@ class DistLS(Dist):
 
     def transform(self, values):
         values_standard = Dist.transform_standard(values)
-        return [self.a + self.b * log(u / (1 - u)) for u in values_standard]
+        return [self.a + self.b * log(u / (1 - u)) for u in values_standard], rnd.logistic(self.a, self.b, len(values))
 
     @staticmethod
     def usage():

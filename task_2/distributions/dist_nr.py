@@ -28,7 +28,7 @@ class DistNR(Dist):
             values_out.append(z1)
             values_out.append(z2)
 
-        return values_out
+        return values_out, rnd.normal(self.μ, self.σ, len(values))
 
     @staticmethod
     def usage():

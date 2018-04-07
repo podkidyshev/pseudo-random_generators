@@ -18,7 +18,7 @@ class DistGM(Dist):
 
     def transform(self, values):
         values_standard = Dist.transform_standard(values)
-
+        """ Методичка
         q = self.c - log(4)
         r = self.c + sqrt(2 * self.c - 1)
 
@@ -40,8 +40,19 @@ class DistGM(Dist):
                 right = 4.5 * u1 * u1 * u2 - (1 + log(4.5))
                 if left >= right:
                     values_out.append(self.a + self.b * self.c * pow(u1 / (1 - u1), p))
-
-        return values_out
+        """
+        # """ Оригинальная статья
+        values_out = []
+        a = self.c - 1
+        b = (self.c - 1 / (6 * self.c)) / a
+        c = 2 / a
+        d = c + 2
+        for u1, u2 in Dist.iter_next_pairs(values_standard):
+            W = b * u1 / u2
+            if c * u2 - d + W + (1 / W) <= 0:
+                values_out.append(self.b * a * W)
+        # """
+        return values_out, rnd.gamma(self.c, self.b, len(values_out))
 
     @staticmethod
     def usage():

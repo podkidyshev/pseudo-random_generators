@@ -1,5 +1,6 @@
 import random
 import operator as op
+import numpy.random as rnd
 from functools import reduce
 
 SEPARATOR = '\n---------------------------------'
@@ -13,9 +14,9 @@ DEFAULT_FORM_C = (0.5, 10)
 
 
 def ncr(n, r):
-    r = min(r, n-r)
-    numer = reduce(op.mul, range(n, n-r, -1), 1)
-    denom = reduce(op.mul, range(1, r+1), 1)
+    r = min(r, n - r)
+    numer = reduce(op.mul, range(n, n - r, -1), 1)
+    denom = reduce(op.mul, range(1, r + 1), 1)
     return numer // denom
 
 
@@ -47,8 +48,8 @@ class Dist:
 
     @staticmethod
     def transform_standard(values):
-        modulo = max(values) + 1
-        return [value / modulo for value in values]
+        modulo = max(values) + 2
+        return [(value + 1) / modulo for value in values]
 
     @staticmethod
     def iter_next_pairs(values):
