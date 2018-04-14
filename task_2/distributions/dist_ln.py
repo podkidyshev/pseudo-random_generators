@@ -1,5 +1,6 @@
 from math import exp
 from distributions import *
+from distributions.dist_nr import DistNR
 
 
 class DistLN(Dist):
@@ -7,16 +8,23 @@ class DistLN(Dist):
 
     def __init__(self, params):
         # параметры
-        self.a = Dist.extract_param(params, 'p1', Dist.gen_param, DEFAULT_SCALE_B, 'a')
-        self.b = Dist.extract_param(params, 'p2', Dist.gen_param, DEFAULT_SCALE_B, 'b')
+        self.a = Dist.extract_param(params, 'p1', Dist.gen_param, DEFAULT_OFFSET_A, 'a')
+        self.b = Dist.extract_param(params, 'p2', Dist.gen_param, (0.1, 1), 'b')
         # ассерты
         assert 0 < self.b, 'Масштаб распределения = {} должен быть положительным числом'.format(self.b)
 
         super().__init__()
 
     def transform(self, values):
+        # self.p1 = self.a
+        # self.p2 = self.b
+        setattr(self, 'p1', self.a)
+        setattr(self, 'p2', self.b)
+        values_normal, q = DistNR(self).transform(values)
+        delattr(self, 'p1')
+        delattr(self, 'p2')
         values_standard = Dist.transform_standard(values)
-        return [self.a + exp(self.b * z) for z in values_standard], rnd.lognormal(self.a, self.b, len(values))
+        return [self.a + exp(self.b * z) for z in values_normal], rnd.lognormal(self.a, self.b, len(values))
 
     @staticmethod
     def usage():
