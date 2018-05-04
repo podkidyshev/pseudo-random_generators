@@ -1,5 +1,5 @@
-from generators import *
-from generators.gen_lfsr import LFSR
+from gen import *
+from gen.lfsr import LFSR
 
 
 class Gen5p(Gen):

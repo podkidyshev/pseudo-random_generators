@@ -1,17 +1,39 @@
 import os
-import sys
+import random
+import argparse
 
-from distributions.dist_st import *
-from distributions.dist_tr import *
-from distributions.dist_ex import *
-from distributions.dist_nr import *
-from distributions.dist_gm import *
-from distributions.dist_ln import *
-from distributions.dist_ls import *
-from distributions.dist_bi import *
+from utils import *
 
-DEFAULT_FILE_IN = 'rnd.dat'
-DEFAULT_FILE_OUT = 'rnd_out.dat'
+from gen.p5 import Gen5p
+from gen.add import GenAdd
+from gen.bbs import GenBBS
+from gen.lc import GenLC
+from gen.lfsr import GenLFSR
+from gen.mt import GenMT
+from gen.nfsr import GenNFSR
+from gen.rc4 import GenRC4
+from gen.rsa import GenRSA
+
+from dist.st import *
+from dist.tr import *
+from dist.ex import *
+from dist.nr import *
+from dist.gm import *
+from dist.ln import *
+from dist.ls import *
+from dist.bi import *
+
+GENS_DICT = {
+    '5p': Gen5p,
+    'add': GenAdd,
+    'bbs': GenBBS,
+    'lc': GenLC,
+    'lfsr': GenLFSR,
+    'nfsr': GenNFSR,
+    'mt': GenMT,
+    'rc4': GenRC4,
+    'rsa': GenRSA,
+}
 
 DISTS_DICT = {
     'st': DistST, 'tr': DistTR, 'ex': DistEX, 'nr': DistNR,
@@ -19,17 +41,22 @@ DISTS_DICT = {
 }
 
 
-def handle_windows_style():
-    args = sys.argv[1:]
-    for idx, arg in enumerate(args):
-        if '/' in arg:
-            arg = arg.replace('/', '--')
-            if ':' in arg:
-                args.insert(idx + 1, arg[arg.index(':') + 1:])
-                arg = arg[:arg.index(':')]
-            args[idx] = arg
+def handle_gen(args: list):
+    if '--g' in args:
+        gen_name = args[args.index('--g') + 1]
+        print('Выбран генератор {}'.format(gen_name) + SEPARATOR)
+        return gen_name
 
-    return args
+    gen_name = random.choice(list(GENS_DICT.keys()))
+    print('Случайным образом выбран генератор {}'.format(gen_name) + SEPARATOR)
+    return gen_name
+
+
+def init_gen_parser(parser: argparse.ArgumentParser, gen_name: str):
+    params = GENS_DICT[gen_name].PARAMS
+
+    for param_name in params:
+        parser.add_argument('--{}'.format(param_name))
 
 
 def handle_dist(args):
@@ -42,7 +69,22 @@ def handle_dist(args):
     return dist_name
 
 
-def handle_file_in(args):
+def handle_file_gen(args, values):
+    """
+    Разбор параметра f - выходной файл со сгенерированной ПСП
+    Производит запись в файл
+    Разделитель - символ новой строки
+    """
+    filename = args.f if args.f else DEFAULT_FILE_IN
+    line_to_default = '' if args.f else 'по умолчанию '
+    print('Запись будет производиться в файл {}{}'.format(line_to_default, filename))
+
+    with open(os.path.abspath(filename), 'w') as file_out:
+        file_out.write('\n'.join(map(str, values)))
+    print('Последовательность успешно записана')
+
+
+def handle_file_dist_in(args):
     """
     Разбор параметра f - входной файл и считывание ПСП
     Возвращает список значений ПСП из файла
@@ -60,7 +102,7 @@ def handle_file_in(args):
     return values
 
 
-def handle_file_out(args, values):
+def handle_file_dist_out(args, values):
     """
     Разбор параметра fout - выходной файл с преобразованной ПСП
     Производит запись в файл
@@ -73,7 +115,53 @@ def handle_file_out(args, values):
     print('Последовательность успешно записана' + SEPARATOR)
 
 
-def handle_usage(args):
+def handle_usage_gen(args):
+    if '--h' not in args:
+        return
+    if args.index('--h') == len(args) - 1 or args[args.index('--h') + 1][:2] == '--':
+        s = """Возможные параметры:
+
+/h - получение справки о работе программы
+/h:<gen> получение справки о генераторе gen
+Возможные значения gen: {}
+
+/n:<count> количество генерируемых чисел, по умолчанию 10000
+
+/g:<gen> выбор генератора из списка (по умолчанию веберется случайно)
+
+/i:<i1 i2...> инициализационный вектор. Может содержать несколько значений 
+Каждое значение после первого вводится далее через пробел в сторогом порядке. 
+Количество значений для каждого генератора фиксировано
+Для подробной справки о векторе для каждого генератора смотрите в /h<gen>
+Каждый генератор может сам сгенерировать подходящий вектор
+
+/f:<filename> - файл для записи сгенерированных чисел. По умолчанию запись ведется в rnd.dat в каталоге запуска процесса
+Возможно введение как абсолютного, так и относительного пути для файла
+
+/<a>:<a_v> - каждый генератор имеет свои параметры. Для справки по ним введите /h:gen
+ВСЕ параметры генераторов - числа. 
+Возможен ввод чисел в двоичном виде. Для этого бинарный массив <arr> введите как 0b<arr> (например, /p:0b1000 эквивалентно /p:8)
+Если требуется полином над GF(2) - введите его эквивалент в десятичной или двоичной системе счисления
+
+/gui - построение в отдельном окне графика с построенными числами (максимальное число точек - 200, иначе построение
+графика производится не будет (без ошибки))
+""".format(', '.join(GENS_DICT.keys()))
+        print(s)
+    else:
+        gen_name = args[args.index('--h') + 1]
+        if gen_name in GENS_DICT.keys():
+            gen_class = GENS_DICT[gen_name]
+            print("Описание генератора {} ({}):".format(gen_name, gen_class.NAME) + SEPARATOR)
+            print("Возможные параметры: {}".format(', '.join(GENS_DICT[gen_name].PARAMS)))
+            print(SEPARATOR[1:], end='')
+            GENS_DICT[gen_name].usage()
+        else:
+            raise Exception('Неизвестное значение параметра для h: выберите одно из: {}'
+                            .format(', '.join(GENS_DICT.keys())))
+    sys.exit(0)
+
+
+def handle_usage_dist(args):
     if '--h' not in args:
         return
 

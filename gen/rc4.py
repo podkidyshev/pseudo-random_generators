@@ -1,4 +1,4 @@
-from generators import *
+from gen import *
 
 
 class GenRC4(Gen):

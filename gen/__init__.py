@@ -1,9 +1,10 @@
 import random
 
+from utils import *
+
 DEFAULT_M = (1000, 1000000)
 DEFAULT_P = (10, 32)
 DEFAULT_W = (10, 32)
-SEPARATOR = '\n---------------------------------'
 
 
 class Gen:
@@ -58,8 +59,8 @@ class Gen:
     @staticmethod
     def extract_param(params, param, gen_func, *gen_func_params):
         value = getattr(params, param)
-        return value if value is not None else gen_func(*gen_func_params)
+        return int(value) if value is not None else gen_func(*gen_func_params)
 
     @staticmethod
     def extract_param_vec(params, idx, gen_func, *gen_func_params):
-        return params.i[idx] if params.i else gen_func(*gen_func_params)
+        return int(params.i[idx]) if params.i else gen_func(*gen_func_params)

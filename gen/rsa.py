@@ -1,7 +1,7 @@
 from sympy.ntheory import factorint, isprime
 from math import gcd
 
-from generators import *
+from gen import *
 
 
 class GenRSA(Gen):

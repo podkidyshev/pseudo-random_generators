@@ -3,16 +3,16 @@ import time
 import matplotlib.pyplot as plt
 
 import launch
-from distributions import SEPARATOR
+from dist import SEPARATOR
 
 HIST_COUNT = 25
 
 
 def parse_args():
     # Костыль 1
-    args = launch.handle_windows_style()
+    args = launch.get_args()
     # Костыль 2
-    launch.handle_usage(args)
+    launch.handle_usage_dist(args)
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--d')
@@ -58,12 +58,12 @@ def main():
     # Аргументы
     args = parse_args()
     # Считывание ПСП из файла
-    values_in = launch.handle_file_in(args)
+    values_in = launch.handle_file_dist_in(args)
     # Старт преобразования к распределению
     values_out, values_reference = transform(args, values_in)
     print('Длина последовательности на выходе = {}'.format(len(values_out)))
     # Запись в файл
-    launch.handle_file_out(args, values_out)
+    launch.handle_file_dist_out(args, values_out)
     # Построение графика полученного распределения
     plot(args, values_out, values_reference)
 
