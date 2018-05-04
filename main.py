@@ -2,7 +2,8 @@ import launch
 import argparse
 
 SAMPLE_SIZE_DEFAULT = 10000
-GENERATOR_DEFAULT = 'rc4'
+DISTRIBUTION_DEFAULT = 'bi'
+GENERATOR_DEFAULT = 'nfsr'
 RC4_KEY = 923213721
 
 
@@ -11,17 +12,20 @@ def parse_args():
     args = launch.get_args()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--d', default='nr')
+    # распределение
+    parser.add_argument('--d', default=DISTRIBUTION_DEFAULT)
     parser.add_argument('--p1', type=float)
     parser.add_argument('--p2', type=float)
     parser.add_argument('--p3', type=float)
     parser.add_argument('--n', type=int, default=SAMPLE_SIZE_DEFAULT)
+    # генерация
+    parser.add_argument('--i', nargs='*', default=None)
+    launch.init_gen_parser(parser, GENERATOR_DEFAULT)
 
     return parser.parse_args(args)
 
 
 def generate_prs(args):
-    args.i = [RC4_KEY]
     generator = launch.GENS_DICT[GENERATOR_DEFAULT](args)
     prs = [next(generator) for _idx in range(args.n)]
     distribution = launch.DISTS_DICT[args.d](args)

@@ -4,7 +4,7 @@ from gen.lfsr import LFSR
 
 class GenNFSR(Gen):
     NAME = 'Нелинейная комбинация РСЛОС'
-    PARAMS = ['p1', 'a1', 'p2', 'a2', 'p3', 'a3', 'w']
+    PARAMS = ['g_p1', 'a1', 'g_p2', 'a2', 'g_p3', 'a3', 'w']
 
     def __init__(self, params):
         # ассерты

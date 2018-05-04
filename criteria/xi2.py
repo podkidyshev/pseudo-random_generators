@@ -9,6 +9,8 @@ class Xi2(Criteria):
         super().__init__()
 
     def check(self, prs, distribution):
+        # distribution.distribution(0)
+        # """
         a, b = min(prs), max(prs)
         intervals = []
         for idx in range(self.k):
@@ -32,7 +34,10 @@ class Xi2(Criteria):
         xi2 = 0
         for aibi in intervals:
             nj, ej = aibi['nj'], aibi['Ej']
-            v = ((nj - ej) ** 2) / ej
+            v = ((nj - ej) ** 2) / ej if ej else 0
             xi2 += v
 
         print(xi2)
+        print(stat.chi2.interval(alpha=0.05, df=4))
+        # """
+
