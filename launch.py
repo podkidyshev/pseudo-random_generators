@@ -4,24 +4,24 @@ import argparse
 
 from utils import *
 
-from gen.p5 import Gen5p
-from gen.add import GenAdd
-from gen.bbs import GenBBS
-from gen.lc import GenLC
-from gen.lfsr import GenLFSR
-from gen.mt import GenMT
-from gen.nfsr import GenNFSR
-from gen.rc4 import GenRC4
-from gen.rsa import GenRSA
+from generators.p5 import Gen5p
+from generators.add import GenAdd
+from generators.bbs import GenBBS
+from generators.lc import GenLC
+from generators.lfsr import GenLFSR
+from generators.mt import GenMT
+from generators.nfsr import GenNFSR
+from generators.rc4 import GenRC4
+from generators.rsa import GenRSA
 
-from dist.st import *
-from dist.tr import *
-from dist.ex import *
-from dist.nr import *
-from dist.gm import *
-from dist.ln import *
-from dist.ls import *
-from dist.bi import *
+from distributions.st import *
+from distributions.tr import *
+from distributions.ex import *
+from distributions.nr import *
+from distributions.gm import *
+from distributions.ln import *
+from distributions.ls import *
+from distributions.bi import *
 
 GENS_DICT = {
     '5p': Gen5p,

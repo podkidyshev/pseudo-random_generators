@@ -1,4 +1,4 @@
-from gen import *
+from generators import *
 
 
 class GenLFSR(Gen):
@@ -75,6 +75,6 @@ class LFSR:
     # Костыль 3
     class DummyParams:
         def __init__(self, p, a, seed):
-            self.p = p
+            self.g_p = p
             self.a = a
             self.i = [seed]

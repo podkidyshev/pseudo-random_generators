@@ -1,16 +1,16 @@
-from gen import *
-from gen.lfsr import LFSR
+from generators import *
+from generators.lfsr import LFSR
 
 
 class Gen5p(Gen):
     NAME = 'Пятипараметрический метод'
-    PARAMS = ['p', 'q1', 'q2', 'q3']
+    PARAMS = ['g_p', 'q1', 'q2', 'q3']
 
     def __init__(self, params):
         # ассерты
         Gen.assert_i_len(params.i, 1, Gen5p.NAME)
         # основные параметры
-        self.p = Gen.extract_param(params, 'p', Gen.gen_param, DEFAULT_P, 'p')
+        self.p = Gen.extract_param(params, 'g_p', Gen.gen_param, DEFAULT_P, 'p')
         bounds = (0, self.p - 1)
         self.q1 = Gen.extract_param(params, 'q1', Gen.gen_param, bounds, 'q1')
         self.q2 = Gen.extract_param(params, 'q2', Gen.gen_param, bounds, 'q2')

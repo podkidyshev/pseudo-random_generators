@@ -1,4 +1,4 @@
-from dist import *
+from distributions import *
 from criteria import *
 
 
@@ -8,8 +8,8 @@ class Xi2(Criteria):
 
         super().__init__()
 
-    def check(self, prs, distribution):
-        # distribution.distribution(0)
+    def check(self, prs, dist):
+        # dist.dist(0)
         # """
         a, b = min(prs), max(prs)
         intervals = []
@@ -26,8 +26,8 @@ class Xi2(Criteria):
                 intervals[0]['nj'] += 1
 
         for aibi in intervals:
-            fbi = distribution.distribution(aibi['ab'][1])
-            fai = distribution.distribution(aibi['ab'][0])
+            fbi = dist.cdf(aibi['ab'][1])
+            fai = dist.cdf(aibi['ab'][0])
             aibi['pj'] = fbi - fai
             aibi['Ej'] = len(prs) * aibi['pj']
 
@@ -37,7 +37,15 @@ class Xi2(Criteria):
             v = ((nj - ej) ** 2) / ej if ej else 0
             xi2 += v
 
-        print(xi2)
-        print(stat.chi2.interval(alpha=0.05, df=4))
+        interval = stats.chi2.interval(alpha=0.05, df=4)
+        print("Вычисленное значение - {}".format(xi2))
+        print("Доверительный интервал = {}".format(interval))
+        if interval[0] <= xi2 <= interval[1]:
+            print("Вычисленное значение принадлежит доверительному интервалу. " +
+                  "Случайная величина подчиняется теоретическому распределению")
+        elif xi2 < interval[0]:
+            print("Xi2 входит в левый 'хвост'. Генератор не случае")
+        else:
+            print("Случайная величина не подчиняется теоретическому распределению")
         # """
 

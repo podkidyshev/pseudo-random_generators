@@ -1,4 +1,4 @@
-from gen import *
+from generators import *
 
 
 class GenMT(Gen):
