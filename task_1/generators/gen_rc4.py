@@ -11,7 +11,7 @@ class GenRC4(Gen):
         # основные параметры
         # инициализационный вектор
         mask = (2 ** 256) - 1
-        self.key = Gen.extract_param_vec(params, 0, Gen.gen_param, (0, mask), 'key') & mask
+        self.key = Gen.extract_vec(params, 0, Gen.gen_param, (0, mask), 'key') & mask
 
         self.S = [idx for idx in range(256)]
 

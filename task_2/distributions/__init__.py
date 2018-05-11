@@ -47,9 +47,13 @@ class Dist:
         return default_value
 
     @staticmethod
-    def transform_standard(values):
-        modulo = max(values) + 2
-        return [(value + 1) / modulo for value in values]
+    def transform_standard(values, kostyl=False):
+        if kostyl:
+            modulo = max(values) + 2
+            return [(value + 1) / modulo for value in values]
+        else:
+            modulo = max(values) + 1
+            return [value / modulo for value in values]
 
     @staticmethod
     def iter_next_pairs(values):

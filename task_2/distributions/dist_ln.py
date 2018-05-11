@@ -16,14 +16,11 @@ class DistLN(Dist):
         super().__init__()
 
     def transform(self, values):
-        # self.p1 = self.a
-        # self.p2 = self.b
         setattr(self, 'p1', self.a)
         setattr(self, 'p2', self.b)
         values_normal, q = DistNR(self).transform(values)
         delattr(self, 'p1')
         delattr(self, 'p2')
-        values_standard = Dist.transform_standard(values)
         return [self.a + exp(self.b * z) for z in values_normal], rnd.lognormal(self.a, self.b, len(values))
 
     @staticmethod

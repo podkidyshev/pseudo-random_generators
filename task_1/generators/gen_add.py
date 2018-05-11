@@ -9,11 +9,11 @@ class GenAdd(Gen):
         # ассерты
         Gen.assert_i_len(params.i, 2, GenAdd.NAME)
         # основные параметры
-        self.m = Gen.extract_param(params, 'm', Gen.gen_param, DEFAULT_M, 'm')
+        self.m = Gen.extract(params, 'm', Gen.gen_param, DEFAULT_M, 'm')
         assert self.m >= 2, 'm должно быть >= 2'
         # инициализационный вектор
-        self.x0 = Gen.extract_param_vec(params, 0, Gen.gen_param, (0, self.m), 'x0') % self.m
-        self.x1 = Gen.extract_param_vec(params, 1, Gen.gen_param, (0, self.m), 'x1') % self.m
+        self.x0 = Gen.extract_vec(params, 0, Gen.gen_param, (0, self.m), 'x0') % self.m
+        self.x1 = Gen.extract_vec(params, 1, Gen.gen_param, (0, self.m), 'x1') % self.m
 
         super().__init__()
 

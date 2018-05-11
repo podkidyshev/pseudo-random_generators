@@ -56,10 +56,10 @@ class Gen:
                 .format(name)
 
     @staticmethod
-    def extract_param(params, param, gen_func, *gen_func_params):
+    def extract(params, param, gen_func, *gen_func_params):
         value = getattr(params, param)
         return value if value is not None else gen_func(*gen_func_params)
 
     @staticmethod
-    def extract_param_vec(params, idx, gen_func, *gen_func_params):
+    def extract_vec(params, idx, gen_func, *gen_func_params):
         return params.i[idx] if params.i else gen_func(*gen_func_params)
