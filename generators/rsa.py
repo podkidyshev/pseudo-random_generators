@@ -13,11 +13,11 @@ class GenRSA(Gen):
         # ассерты
         Gen.assert_i_len(params.i, 1, GenRSA.NAME)
         # основные параметры
-        self.p = Gen.extract_param(params, 'p', GenRSA.gen_prime, 'p', GenRSA.big)
-        self.q = Gen.extract_param(params, 'q', GenRSA.gen_prime, 'q', GenRSA.small)
-        self.n = Gen.extract_param(params, 'rsa_n', self.gen_n)
-        self.e = Gen.extract_param(params, 'rsa_e', self.gen_e)
-        self.w = Gen.extract_param(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
+        self.p = Gen.extract(params, 'p', GenRSA.gen_prime, 'p', GenRSA.big)
+        self.q = Gen.extract(params, 'q', GenRSA.gen_prime, 'q', GenRSA.small)
+        self.n = Gen.extract(params, 'rsa_n', self.gen_n)
+        self.e = Gen.extract(params, 'rsa_e', self.gen_e)
+        self.w = Gen.extract(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
         # ассерты
         assert 1 <= self.w, 'ограничение 1 <= w'
         assert isprime(self.p), 'p должно быть простым положительным числом'
@@ -25,7 +25,7 @@ class GenRSA(Gen):
         self.p, self.q = GenRSA.assert_n(self.n)
         GenRSA.assert_e(self.p, self.q, self.e)
         # инициализационный вектор
-        self.x0 = Gen.extract_param_vec(params, 0, Gen.gen_param, (1, self.n - 1), 'x0') % self.n
+        self.x0 = Gen.extract_vec(params, 0, Gen.gen_param, (1, self.n - 1), 'x0') % self.n
 
         super().__init__()
 

@@ -25,7 +25,7 @@ class GenMT(Gen):
         # ассерты
         Gen.assert_i_len(params.i, 1, GenMT.NAME)
         # инициализационный вектор
-        self.seed = Gen.extract_param_vec(params, 0, Gen.gen_param, (0, (2 ** GenMT.w) - 1), 'seed') & self.mask_all
+        self.seed = Gen.extract_vec(params, 0, Gen.gen_param, (0, (2 ** GenMT.w) - 1), 'seed') & self.mask_all
 
         self.a = [0] * GenMT.p
         self.a[0] = self.seed

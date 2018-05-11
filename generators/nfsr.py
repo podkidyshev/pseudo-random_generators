@@ -12,7 +12,7 @@ class GenNFSR(Gen):
         self.lfsr = []
         for _idx in range(3):
             self.lfsr.append(LFSR(params, _idx + 1))
-        self.w = Gen.extract_param(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
+        self.w = Gen.extract(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
         assert self.w > 0, 'длина выходного слова должна быть целым положительным числом'
 
         super().__init__()
