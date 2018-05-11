@@ -10,18 +10,18 @@ class Gen5p(Gen):
         # ассерты
         Gen.assert_i_len(params.i, 1, Gen5p.NAME)
         # основные параметры
-        self.p = Gen.extract_param(params, 'p', Gen.gen_param, DEFAULT_P, 'p')
+        self.p = Gen.extract(params, 'p', Gen.gen_param, DEFAULT_P, 'p')
         bounds = (0, self.p - 1)
-        self.q1 = Gen.extract_param(params, 'q1', Gen.gen_param, bounds, 'q1')
-        self.q2 = Gen.extract_param(params, 'q2', Gen.gen_param, bounds, 'q2')
-        self.q3 = Gen.extract_param(params, 'q3', Gen.gen_param, bounds, 'q3')
+        self.q1 = Gen.extract(params, 'q1', Gen.gen_param, bounds, 'q1')
+        self.q2 = Gen.extract(params, 'q2', Gen.gen_param, bounds, 'q2')
+        self.q3 = Gen.extract(params, 'q3', Gen.gen_param, bounds, 'q3')
 
         assert 0 <= self.q1 < self.p, 'параметры q(i) должны удовлетворять 0 <= q(i) < p'
         assert 0 <= self.q2 < self.p, 'параметры q(i) должны удовлетворять 0 <= q(i) < p'
         assert 0 <= self.q3 < self.p, 'параметры q(i) должны удовлетворять 0 <= q(i) < p'
         # инициализационный вектор
         mask = 2 ** self.p - 1
-        self.seed = Gen.extract_param_vec(params, 0, Gen.gen_param, (0, mask), 'seed') & mask
+        self.seed = Gen.extract_vec(params, 0, Gen.gen_param, (0, mask), 'seed') & mask
 
         self.a = (1 << self.q1) | (1 << self.q2) | (1 << self.q3)
         self.lfsr = LFSR(LFSR.DummyParams(self.p, self.a, self.seed))

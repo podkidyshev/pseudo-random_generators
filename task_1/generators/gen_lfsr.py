@@ -3,7 +3,7 @@ from generators import *
 
 class GenLFSR(Gen):
     NAME = 'Регистр сдвига с обратной связью (РСЛОС)'
-    PARAMS = ['g_p', 'a', 'w']
+    PARAMS = ['p', 'a', 'w']
 
     def __init__(self, params):
         # ассерты
@@ -38,7 +38,7 @@ class LFSR:
     def __init__(self, params, idx=None):
         idx = idx if idx is not None else ''
 
-        p_name = 'g_p{}'.format(idx)
+        p_name = 'p{}'.format(idx)
         a_name = 'a{}'.format(idx)
         x_name = 'x{}'.format(idx)
 
@@ -75,6 +75,6 @@ class LFSR:
     # Костыль 3
     class DummyParams:
         def __init__(self, p, a, seed):
-            self.g_p = p
+            self.p = p
             self.a = a
             self.i = [seed]

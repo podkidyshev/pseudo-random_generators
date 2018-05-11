@@ -1,8 +1,6 @@
 import random
 import operator as op
 import numpy.random as rnd
-import scipy.stats as stats
-import scipy.special as spec
 from functools import reduce
 
 SEPARATOR = '\n---------------------------------'

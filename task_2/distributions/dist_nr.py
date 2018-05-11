@@ -37,6 +37,3 @@ p1(μ) - математическое ожидание
 p2(σ) - среднеквадратичное отклонение - >= 0
 """
         print(s)
-
-    def cdf(self, x):
-        return stats.norm.cdf(x=x, loc=self.μ, scale=self.σ)

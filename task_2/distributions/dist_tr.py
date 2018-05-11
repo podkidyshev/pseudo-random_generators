@@ -28,6 +28,3 @@ p2(b) - правая граница интервала
 Параметры a и b должны составлять непустой интервал (a < b)
 """
         print(s, end='')
-
-    def cdf(self, x):
-        return stats.triang.cdf(x=(x - self.a) / self.b, c=0.5, loc=-1, scale=2)

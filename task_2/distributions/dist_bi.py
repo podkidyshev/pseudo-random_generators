@@ -48,6 +48,3 @@ p2(n) - число испытаний
         n = random.randint(*span)
         Dist.print_genned_param(name, n)
         return n
-
-    def cdf(self, x):
-        return stats.binom.cdf(k=int(x), n=self.n, p=self.p)

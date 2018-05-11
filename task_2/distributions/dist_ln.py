@@ -1,6 +1,6 @@
-from math import exp, log, sqrt
+from math import exp
 from distributions import *
-from distributions.nr import DistNR
+from distributions.dist_nr import DistNR
 
 
 class DistLN(Dist):
@@ -30,6 +30,3 @@ p1(a) - смещение
 p2(b) - масштаб - > 0
 """
         print(s)
-
-    def cdf(self, x):
-        return 0.5 + 0.5 * spec.erf((log(x / self.b) - self.a) / sqrt(2))
