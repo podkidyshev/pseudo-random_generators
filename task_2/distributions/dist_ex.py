@@ -25,6 +25,3 @@ p1(a) - смещение
 p2(b) - масштаб - > 0
 """
         print(s)
-
-    def cdf(self, x):
-        return stats.expon.cdf(x=x, scale=self.b, loc=self.a)
