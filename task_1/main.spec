@@ -7,26 +7,30 @@ sys.setrecursionlimit(10000)
 
 
 a = Analysis(['main.py'],
-             pathex=['E:\\Projects\\SSUGenerators\\task_1'],
+             pathex=['D:\\Projects\\SSU-Generators\\task_1\\release'],
              binaries=[],
              datas=[],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
-             win_no_prefer_redirects=False,
-             win_private_assemblies=False,
              cipher=block_cipher)
-pyz = PYZ(a.pure, a.zipped_data,
-             cipher=block_cipher)
+
+pyz = PYZ(a.pure)
+
 exe = EXE(pyz,
           a.scripts,
-          a.binaries,
-          a.zipfiles,
-          a.datas,
-          name='generators',
+          exclude_binaries=True,
+          name='generators.exe',
           debug=False,
-          strip=False,
-          upx=True,
-          runtime_tmpdir=None,
+          strip=None,
+          upx=False,
           console=True )
+
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=None,
+               upx=False,
+               name='lib')
