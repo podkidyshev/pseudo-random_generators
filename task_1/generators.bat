@@ -1,1 +1,0 @@
-release\generators.exe /d:bbs /n:100 /gui
