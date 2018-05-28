@@ -1,5 +1,7 @@
 #MY OWN EXCLUDES
 *.exe
+release/
+release
 .idea
 
 # Byte-compiled / optimized / DLL files
