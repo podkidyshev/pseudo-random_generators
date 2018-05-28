@@ -34,8 +34,12 @@ def main():
     prs = gen.generate(args)
     prs_st, prs_ideal = dist.transform(args, prs)
 
+    import criteria.chi2 as chi2
     import criteria.series as series
+    import criteria.intervals as intervals
+    # chi2.chi2(prs_st)
     series.series(prs_st)
+    #intervals.intervals(prs_st)
 
 
 if __name__ == '__main__':

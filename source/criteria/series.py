@@ -1,37 +1,20 @@
-from math import sqrt, log
+import distributions
+import criteria.chi2 as chi2
 
 
-def series(prs):
-    var_series = list(sorted(prs))
-    if len(prs) & 1:
-        xmed = var_series[len(prs) // 2]
-    else:
-        xmed = 0.5 * (var_series[len(prs) // 2] + var_series[len(prs) // 2 + 1])
+def series(prs_orig, d=15):
+    prs = prs_orig[:]
 
-    v = 1
-    tau = 0
-    cur_sign = prs[0] < xmed
-    cur_count = 1
-    for idx, value in enumerate(prs):
-        if idx == 0 or value == xmed:
-            continue
-        next_sign = value < xmed
-        if cur_sign == next_sign:
-            cur_count += 1
-        else:
-            v += 1
-            cur_sign = next_sign
-            tau = max(tau, cur_count)
-            cur_count = 0
+    k = d * d
+    prsd = [int(v * d) for v in prs]
+    nj = [0 for _idx in range(k)]
+    for u1, u2 in distributions.Dist.iter_next_pairs(prsd):
+        nj[u1 * d + u2] += 1
 
-    n = len(prs)
-    print("Число серий = {}".format(v))
-    print("Длина максимальной серии - {}".format(tau))
-    v1 = 0.5 * (n + 1 - 1.96 * sqrt(n - 1))
-    v2 = 3.3 * log(n + 1, 10)
-    correct = v > v1 and tau < v2
-    print("для v {}, для tau {}".format(v1, v2))
-    if correct:
-        print("Гипотеза принята, последовательность случайна")
-    else:
-        print("Гипотеза отвергается. Последовательность не случайна")
+    ej = len(prsd) / k
+    chi = 0
+    for j in range(k):
+        v = ((nj[j] - ej) ** 2) / ej
+        chi += v
+
+    chi2.chi2_conclusion(chi2.chi2_compute(nj, ej), chi2.chi2_stat(0.95, k))
