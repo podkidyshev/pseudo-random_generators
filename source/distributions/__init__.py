@@ -8,7 +8,7 @@ from functools import reduce
 SEPARATOR = '\n---------------------------------'
 
 DEFAULT_INTERVAL_A = 0
-DEFAULT_INTERVAL_B = 1000
+DEFAULT_INTERVAL_B = 5
 
 DEFAULT_OFFSET_A = (-5, 5)
 DEFAULT_SCALE_B = (0.1, 3)
