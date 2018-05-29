@@ -37,9 +37,11 @@ def main():
     import criteria.chi2 as chi2
     import criteria.series as series
     import criteria.intervals as intervals
+    import criteria.splitting as splitting
     # chi2.chi2(prs_st)
-    series.series(prs_st)
+    #series.series(prs_st)
     #intervals.intervals(prs_st)
+    splitting.splitting(prs_st)
 
 
 if __name__ == '__main__':
