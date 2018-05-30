@@ -5,7 +5,7 @@ import utils
 import utils.launch_gen as launch
 
 DEFAULT_LEN = 10000
-DEFAULT_VALUES_MODULO = 1000
+DEFAULT_VALUES_MODULO = 1048576
 DEFAULT_PLOT_MAX_VALUES = 200
 
 

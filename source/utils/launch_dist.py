@@ -40,7 +40,7 @@ def handle_file_dist_in(args):
     filename = args.f if args.f else utils.DEFAULT_FILE_IN
     if not os.path.exists(os.path.abspath(filename)):
         raise Exception('Не найден входной файл с ПСП!')
-    print('INFO: Чтение будет производиться из файла {}{}'.format('' if args.fout else 'по умолчанию ', filename))
+    print('INFO: Чтение будет производиться из файла {}{}'.format('' if args.f else 'по умолчанию ', filename))
 
     with open(os.path.abspath(filename)) as file_in:
         values = file_in.read().split('\n')
