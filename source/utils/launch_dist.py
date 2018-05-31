@@ -1,6 +1,5 @@
 import os
 import sys
-import random
 
 import utils
 
@@ -18,20 +17,11 @@ DISTS_DICT = {
     'gm': DistGM, 'ln': DistLN, 'ls': DistLS, 'bi': DistBI
 }
 
-
-def handle_dist(args):
-    if args.d:
-        print('INFO: Выбрано распределение {}'.format(args.d))
-        dist_name = args.d
-    else:
-        dist_name = random.choice(list(DISTS_DICT.keys()))
-        print('INFO: Случайным образом выбрано распределение {}'.format(dist_name))
-
-    print(utils.SEPARATOR)
-    return dist_name
+DEFAULT_DIST_NAME = 'st'
+DEFAULT_HIST_COUNT = 25
 
 
-def handle_file_dist_in(args):
+def read(args):
     """
     Разбор параметра f - входной файл и считывание ПСП
     Возвращает список значений ПСП из файла
@@ -51,7 +41,7 @@ def handle_file_dist_in(args):
     return values
 
 
-def handle_file_dist_out(args, values):
+def write(args, values):
     """
     Разбор параметра fout - выходной файл с преобразованной ПСП
     Производит запись в файл
@@ -65,7 +55,23 @@ def handle_file_dist_out(args, values):
     print(utils.SEPARATOR)
 
 
-def handle_usage_dist(args):
+def plot(args, values, values_reference):
+    if not args.gui:
+        return
+
+    import matplotlib.pyplot as plt
+    plt.figure()
+    plt.subplot(1, 2, 1)
+    plt.title('Преобразованная ПСП')
+    plt.hist(values, DEFAULT_HIST_COUNT)
+
+    plt.subplot(1, 2, 2)
+    plt.title('Генерация системными функциями')
+    plt.hist(values_reference, DEFAULT_HIST_COUNT)
+    plt.show()
+
+
+def usage(args):
     if '--h' not in args:
         return
 

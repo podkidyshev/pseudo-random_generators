@@ -22,7 +22,7 @@ def parse_args():
 def main():
     args = parse_args()
     # Генерация ПСП и приведение к стандартному равномерному распределению
-    prs = launch_dist.handle_file_dist_in(args)
+    prs = launch_dist.read(args)
     prs_st, prs_ideal = dist.transform(args, prs)
 
     old_separator = utils.SEPARATOR

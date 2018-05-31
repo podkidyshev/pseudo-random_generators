@@ -10,20 +10,20 @@ class GenBBS(Gen):
 
     def __init__(self, params):
         # ассерты
-        Gen.assert_i_len(params.i, 0, GenBBS.NAME)
+        Gen.assert_ilen(params.i, 0, GenBBS.NAME)
         # основные параметры
-        self.p = Gen.extract_param(params, 'p', GenBBS.gen_blum_factor, 'p', GenBBS.big)
-        self.q = Gen.extract_param(params, 'q', GenBBS.gen_blum_factor, 'q', GenBBS.small)
-        self.n = Gen.extract_param(params, 'bbs_n', lambda: self.p * self.q)
+        self.p = Gen.get_arg(params, 'p', GenBBS.gen_blum_factor, 'p', GenBBS.big)
+        self.q = Gen.get_arg(params, 'q', GenBBS.gen_blum_factor, 'q', GenBBS.small)
+        self.n = Gen.get_arg(params, 'bbs_n', lambda: self.p * self.q)
 
-        self.w = Gen.extract_param(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
+        self.w = Gen.get_arg(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
         # ассерты
         assert 1 <= self.w, 'ограничение 1 <= w'
         assert isprime(self.p) and self.p % 4 == 3, 'p не простое или % 3 != 4'
         assert isprime(self.q) and self.q % 4 == 3, 'q не простое или % 3 != 4'
         self.p, self.q = GenBBS.check_n(self.n)
         # инициализационный вектор
-        self.x = Gen.extract_param_vec(params, 0, GenBBS.gen_relatively_prime, self.n, 'x')
+        self.x = Gen.get_iarg(params, 0, GenBBS.gen_relatively_prime, self.n, 'x')
         assert gcd(self.n, self.x) == 1, 'bbs_n = {} и x = {} должны быть взаимно простыми'.format(self.n, self.x)
         self.x0 = pow(self.x, 2, self.n)
 

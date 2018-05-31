@@ -7,10 +7,10 @@ class GenLFSR(Gen):
 
     def __init__(self, params):
         # ассерты
-        Gen.assert_i_len(params.i, 1, GenLFSR.NAME)
+        Gen.assert_ilen(params.i, 1, GenLFSR.NAME)
         # параметры
         self.lfsr = LFSR(params)
-        self.w = Gen.extract_param(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
+        self.w = Gen.get_arg(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
         assert self.w > 0, 'длина выходного слова должна быть целым положительным числом'
 
         super().__init__()
@@ -42,10 +42,10 @@ class LFSR:
         a_name = 'a{}'.format(idx)
         x_name = 'x{}'.format(idx)
 
-        self.p = Gen.extract_param(params, p_name, Gen.gen_param, DEFAULT_P, p_name)
+        self.p = Gen.get_arg(params, p_name, Gen.gen_param, DEFAULT_P, p_name)
         assert self.p > 0, 'длина регистра должна быть целым положительным числом'
-        self.a = Gen.extract_param(params, a_name, self.choose_poly) & (2 ** self.p) - 1
-        self.x = Gen.extract_param_vec(params, 0, Gen.gen_param, (1, 2 ** self.p - 1), x_name) & (2 ** self.p) - 1
+        self.a = Gen.get_arg(params, a_name, self.choose_poly) & (2 ** self.p) - 1
+        self.x = Gen.get_iarg(params, 0, Gen.gen_param, (1, 2 ** self.p - 1), x_name) & (2 ** self.p) - 1
 
     def __next__(self):
         out_bit = self.x & 1

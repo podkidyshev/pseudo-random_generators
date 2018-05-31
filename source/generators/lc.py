@@ -7,14 +7,14 @@ class GenLC(Gen):
 
     def __init__(self, params):
         # ассерты
-        Gen.assert_i_len(params.i, 1, GenLC.NAME)
+        Gen.assert_ilen(params.i, 1, GenLC.NAME)
         # основные параметры
-        self.m = Gen.extract_param(params, 'm', Gen.gen_param, DEFAULT_M, 'm')
+        self.m = Gen.get_arg(params, 'm', Gen.gen_param, DEFAULT_M, 'm')
         assert 2 <= self.m, 'ограничение 2 <= m'
-        self.a = Gen.extract_param(params, 'a', Gen.gen_param, (0, self.m), 'a') % self.m
-        self.c = Gen.extract_param(params, 'c', Gen.gen_param, (0, self.m), 'c') % self.m
+        self.a = Gen.get_arg(params, 'a', Gen.gen_param, (0, self.m), 'a') % self.m
+        self.c = Gen.get_arg(params, 'c', Gen.gen_param, (0, self.m), 'c') % self.m
         # инициализационный вектор
-        self.x0 = Gen.extract_param_vec(params, 0, Gen.gen_param, (0, self.m), 'x0') % self.m
+        self.x0 = Gen.get_iarg(params, 0, Gen.gen_param, (0, self.m), 'x0') % self.m
 
         super().__init__()
 

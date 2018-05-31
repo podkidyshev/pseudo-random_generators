@@ -8,11 +8,11 @@ class GenNFSR(Gen):
 
     def __init__(self, params):
         # ассерты
-        Gen.assert_i_len(params.i, 3, GenNFSR.NAME)
+        Gen.assert_ilen(params.i, 3, GenNFSR.NAME)
         self.lfsr = []
         for _idx in range(3):
             self.lfsr.append(LFSR(params, _idx + 1))
-        self.w = Gen.extract_param(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
+        self.w = Gen.get_arg(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
         assert self.w > 0, 'длина выходного слова должна быть целым положительным числом'
 
         super().__init__()

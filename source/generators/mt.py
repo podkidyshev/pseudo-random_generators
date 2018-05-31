@@ -23,9 +23,9 @@ class GenMT(Gen):
         self.mask_first = (1 << GenMT.r) - 1
         self.mask_last = self.mask_all - self.mask_first
         # ассерты
-        Gen.assert_i_len(params.i, 1, GenMT.NAME)
+        Gen.assert_ilen(params.i, 1, GenMT.NAME)
         # инициализационный вектор
-        self.seed = Gen.extract_param_vec(params, 0, Gen.gen_param, (0, (2 ** GenMT.w) - 1), 'seed') & self.mask_all
+        self.seed = Gen.get_iarg(params, 0, Gen.gen_param, (0, (2 ** GenMT.w) - 1), 'seed') & self.mask_all
 
         self.a = [0] * GenMT.p
         self.a[0] = self.seed

@@ -1,6 +1,6 @@
 import random
 
-from utils import *
+import utils
 
 DEFAULT_M = (1000, 1000000)
 DEFAULT_P = (10, 32)
@@ -8,8 +8,13 @@ DEFAULT_W = (10, 32)
 
 
 class Gen:
+    """
+    В данном классе в основном реализованы методы для вывода значений параметров на экран, парсинга аргументов и
+    их автоматической генерации
+    """
     def __init__(self):
-        print(SEPARATOR[1:] + '\nНачало работы генератора. Параметры:')
+        print(utils.SEPARATOR)
+        print('INFO: Начало работы генератора. Параметры:')
         for attr, value in self.__dict__.items():
             if isinstance(value, list) and len(value) > 5:
                 print('{} = {}'.format(attr, Gen.print_list(value)))
@@ -23,7 +28,7 @@ class Gen:
                 for obj_attr, obj_value in value.__dict__.items():
                     print('{}{} = {}'.format(obj_attr, '', obj_value))
 
-        print(SEPARATOR[1:])
+        print(utils.SEPARATOR)
 
     @staticmethod
     def print_list(l):
@@ -46,21 +51,14 @@ class Gen:
             .format(attr_check, getattr(self, attr_check), attr_modulo, getattr(self, attr_modulo))
 
     @staticmethod
-    def assert_i_len(i, l, name):
-        if i is not None:
-            assert len(i) == l, 'Инициализационный вектор для {} должен содержать {} элементов'.format(name, l)
+    def assert_ilen(i, l, name):
+        assert i is None or len(i) == l, 'Инициализационный вектор для {} должен содержать {} элементов'.format(name, l)
 
     @staticmethod
-    def assert_params(param_main, params: list, name=''):
-        for param in params:
-            assert not(param_main is None and param is not None), 'Не хватает параметра {}, смотрите /h:<gen_name>'\
-                .format(name)
-
-    @staticmethod
-    def extract_param(params, param, gen_func, *gen_func_params):
+    def get_arg(params, param, gen_func, *gen_func_params):
         value = getattr(params, param)
         return int(value) if value is not None else gen_func(*gen_func_params)
 
     @staticmethod
-    def extract_param_vec(params, idx, gen_func, *gen_func_params):
+    def get_iarg(params, idx, gen_func, *gen_func_params):
         return int(params.i[idx]) if params.i else gen_func(*gen_func_params)

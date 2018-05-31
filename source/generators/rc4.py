@@ -7,11 +7,11 @@ class GenRC4(Gen):
 
     def __init__(self, params):
         # ассерты
-        Gen.assert_i_len(params.i, 1, GenRC4.NAME)
+        Gen.assert_ilen(params.i, 1, GenRC4.NAME)
         # основные параметры
         # инициализационный вектор
         mask = (2 ** 256) - 1
-        self.key = Gen.extract_param_vec(params, 0, Gen.gen_param, (0, mask), 'key') & mask
+        self.key = Gen.get_iarg(params, 0, Gen.gen_param, (0, mask), 'key') & mask
 
         self.S = [idx for idx in range(256)]
 
