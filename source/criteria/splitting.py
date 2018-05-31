@@ -4,14 +4,14 @@ import criteria.chi2 as chi2
 
 
 def splitting(prs_orig):
-    # Данный критерий называется также покер-критерий
-    # Приводим к дискретному распределению от 0 до <число различных карт - 1=12>
+    print('INFO: Критерий разбиений (покер-критерий)')
+    # Приводим к дискретному распределению от 0 до <число различных карт - 1> = 12
     d = 13  # число различных карт
     prs = [floor(d * v) for v in prs_orig]
 
     k = 5              # пятерки чисел/карт
     n = len(prs) // k  # число групп элементов
-    counts = [0] * k   # массив: в r-ой ячейке число групп с r+1-различными картами (нуль-нумерация)
+    counts = [0] * k   # массив: в r-ой ячейке = число групп с r+1-различными картами (нуль-нумерация)
 
     for i in range(n):
         # число различных элементов/карт в руке
@@ -25,6 +25,6 @@ def splitting(prs_orig):
         pr *= st
         for i in range(r):
             pr *= d - i
-        plist.append(pr * n)
+        plist.append(pr)
 
-    chi2.chi2_conclusion(chi2.chi2_compute(counts, plist), chi2.chi2_stat(0.95, k))
+    chi2.conclusion(chi2.compute(counts, plist, n), chi2.stat(k))

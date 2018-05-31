@@ -1,8 +1,8 @@
 import criteria.chi2 as chi2
 
 
-def intervals(prs_orig):
-    prs = prs_orig[:]
+def intervals(prs):
+    print('INFO: Критерий интервалов. Проверка на "отклонение выше среднего" (a = 0, b = 0.5)')
     a, b = 0, 0.5
 
     t = 5
@@ -30,5 +30,4 @@ def intervals(prs_orig):
 
     p = b - a
     pr = [(1 - p) ** t if r == t else p * (1 - p) ** r for r in range(t + 1)]
-    ej = [n * pi for pi in pr]
-    chi2.chi2_conclusion(chi2.chi2_compute(cr, ej), chi2.chi2_stat(0.95, t + 1))
+    chi2.conclusion(chi2.compute(cr, pr, n), chi2.stat(t + 1))

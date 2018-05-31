@@ -14,6 +14,7 @@ B = [1/6, 5/24, 11/120, 19/720, 29/5040, 1/840]
 
 
 def run_1(prs):
+    print('INFO: Основной критерий монотонности')
     c = [0, 0, 0, 0, 0, 0]
 
     series = 1
@@ -32,10 +33,12 @@ def run_1(prs):
             m += (c[i] - n * B[i]) * (c[j] - n * B[j]) * A[i][j]
     m /= n - 6
 
-    chi2.chi2_conclusion(m, chi2.chi2_stat(0.95, 6))
+    print('Вычисленная статистика M = {}'.format(m))
+    chi2.conclusion(m, chi2.stat(6))
 
 
 def run_2(prs):
+    print('INFO: Упрощенный критерий монотонности')
     c = [0, 0, 0, 0, 0, 0]
 
     series = 1
@@ -56,6 +59,5 @@ def run_2(prs):
     c[min(5, series - 1)] += 1
 
     p = [0.5, 0.25, 0.125, 0.0625, 0.03125, 0.0150625]
-    e = [n * pi for pi in p]
 
-    chi2.chi2_conclusion(chi2.chi2_compute(c, e), chi2.chi2_stat(0.95, 6))
+    chi2.conclusion(chi2.compute(c, p, n), chi2.stat(6))

@@ -1,38 +1,57 @@
 from distributions import *
 
+DEFAULT_CHI2_DEGREES_OF_FREEDOM = 5
 
-def chi2(prs, k=5, alpha=0.95):
+
+def chi2(prs):
+    k = DEFAULT_CHI2_DEGREES_OF_FREEDOM
+    print('INFO: Критерий Хи-квадрат')
+    print('Число степеней свободы k = {}'.format(k))
     # a, b = 0, 1 - исследуем стандартное равномерное распределение
-    ab = [((idx + 1) / k, idx / k) for idx in range(k)]
-    nj = [0 for _idx in range(k)]
-    ej = [len(prs) * (bi - ai) for ai, bi in ab]
+    ab = [(idx / k, (idx + 1) / k) for idx in range(k)]
+    nlist = [0 for _idx in range(k)]        # число значений в интервалах
+    plist = [bi - ai for ai, bi in ab]      # теоретические вероятности попадания в интервалы
     for value in prs:
-        for idx, ai, bi in enumerate(ab):
+        for idx, (ai, bi) in enumerate(ab):
             if ai < value <= bi:
-                nj[idx] += 1
+                nlist[idx] += 1
                 break
         else:  # value == 0
-            nj[0] += 1
+            nlist[0] += 1
 
-    chi2_conclusion(chi2_compute(nj, ej), chi2_stat(alpha, k - 1))
+    conclusion(compute(nlist, plist, len(prs)), stat(k - 1))
 
 
-def chi2_compute(nj: list, ej):
+def compute(nlist, plist, n):
+    """
+    Вычисление статистики хи-квадрат
+    :param nlist: массив количества значений ПСП в интервалах
+    :param plist: массив теоретических вероятностей попадания в интервалы
+    :param n: число значений
+    :return: выборочная статистика хи-квадрат
+    """
     chi = 0
-    for idx, n in enumerate(nj):
-        e = ej[idx] if type(ej) == list else ej
-        chi += ((n - e) ** 2) / e if e else 0
+    for idx, nj in enumerate(nlist):
+        pj = plist[idx] if type(plist) == list else plist
+        ej = n * pj
+        chi += ((nj - ej) ** 2) / ej if ej else 0
     return chi
 
 
-def chi2_stat(alpha, k):
-    return stats.chi2.interval(alpha=alpha, df=k)
+def stat(k):
+    """
+    :param k: число степеней свободы
+    :return: доверительный интервал с уровнем значимости 0.05 и k степенями свободы
+    """
+    return stats.chi2.interval(alpha=0.95, df=k)
 
 
-def chi2_conclusion(chi, interval):
-    print("Вычисленное значение - {}".format(chi))
+def conclusion(chi, interval):
+    print("Вычисленная статистика Хи2 - {}".format(chi))
     print("Доверительный интервал = {}".format(interval))
-    if chi <= interval[1]:
-        print("ИТОГ: Вычисленное значение принадлежит доверительному интервалу. ПРС случайна")
+    if interval[0] <= chi <= interval[1]:
+        print("ИТОГ: Вычисленное значение принадлежит доверительному интервалу. ПСП равномерна ~U(0,1)")
+    elif interval[1] < chi:
+        print("ИТОГ: ПСП не равномерна")
     else:
-        print("ИТОГ: ПРС не случайна")
+        print('ИТОГ: ГПСЧ не случаен')

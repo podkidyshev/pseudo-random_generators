@@ -6,6 +6,7 @@ DEFAULT_T = 4
 
 
 def permutations(prs):
+    print('INFO: Критерий перестановок. По умолчанию t (размер групп) = 4')
     t = DEFAULT_T
     ft = factorial(t)
     n_possible = len(prs) // t
@@ -26,7 +27,7 @@ def permutations(prs):
         permutation = tuple(s_group.index(v) for v in group)
         counts[permutation] += 1
 
-    chi2.chi2_conclusion(chi2.chi2_compute(list(counts.values()), n / ft), chi2.chi2_stat(0.95, ft))
+    chi2.conclusion(chi2.compute(list(counts.values()), 1 / ft, n), chi2.stat(ft))
 
 
 def fill_permutations(container, t, buffer, values_buffer):

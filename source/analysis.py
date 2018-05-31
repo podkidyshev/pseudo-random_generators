@@ -2,7 +2,6 @@ import argparse
 
 import utils
 import utils.launch_dist as launch_dist
-import gen
 import dist
 
 
@@ -21,26 +20,32 @@ def parse_args():
 
 
 def main():
-    # Аргументы
     args = parse_args()
-    # Генерация ПРС и приведение к стандартному равномерному распределению
+    # Генерация ПСП и приведение к стандартному равномерному распределению
     prs = launch_dist.handle_file_dist_in(args)
     prs_st, prs_ideal = dist.transform(args, prs)
 
+    old_separator = utils.SEPARATOR
+    utils.SEPARATOR = old_separator + '\n' + old_separator
+
     import criteria.chi2 as chi2
-    import criteria.series as series
+    import criteria.serial as serial
     import criteria.intervals as intervals
     import criteria.splitting as splitting
-    #import criteria.permutations as permutations
+    import criteria.permutations as permutations
     import criteria.run as run
     import criteria.conflicts as conflicts
-    # chi2.chi2(prs_st)
-    #series.series(prs_st)
-    #intervals.intervals(prs_st)
-    #splitting.splitting(prs_st)
-    #permutations.permutations(prs_st)
-    #run.run_2(prs_st)
-    conflicts.conflicts(prs)
+
+    criterias = [
+        chi2.chi2, serial.serial, intervals.intervals, splitting.splitting,
+        permutations.permutations, run.run_1, run.run_2, conflicts.conflicts
+    ]
+
+    for crit in criterias:
+        crit(prs_st if crit != conflicts.conflicts else prs)  # критерий конфликтов запустим на исходной ПСП
+        print(utils.SEPARATOR)
+
+    utils.SEPARATOR = old_separator
 
 
 if __name__ == '__main__':
