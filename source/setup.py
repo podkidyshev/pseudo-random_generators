@@ -8,7 +8,7 @@ executables = [
 	Executable("dist.py", targetName="dist.exe"), 
 	Executable("gen.py", targetName="gen.exe"), 
 	Executable("analysis.py", targetName="analysis.exe"),
-    Executable("analyse_all.py", targetName="analyse_all.exe")
+    Executable("all.py", targetName="all.exe")
 ]
 
 buildOptions = dict(

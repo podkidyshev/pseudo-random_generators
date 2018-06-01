@@ -14,8 +14,8 @@ class GenBBS(Gen):
         # ассерты
         Gen.assert_len(params.i, 1, GenBBS.NAME)
         # основные параметры
-        self.p = Gen.get(params, 'p', GenBBS.gen_blum_factor, 'p', GenBBS.big)
-        self.q = Gen.get(params, 'q', GenBBS.gen_blum_factor, 'q', GenBBS.small)
+        self.p = Gen.get(params, 'p', GenBBS.gen_blum_factor, 'p', GenBBS.primes)
+        self.q = Gen.get(params, 'q', GenBBS.gen_blum_factor, 'q', GenBBS.primes)
         self.n = Gen.get(params, 'bbs_n', lambda: self.p * self.q)
         self.w = Gen.get(params, 'w', Gen.default, DEFAULT_W, 'w')
         # ассерты
@@ -54,7 +54,7 @@ class GenBBS(Gen):
     @staticmethod
     def gen_relatively_prime(f, name):
         factors = set(factorint(f).keys())
-        possible_factors = [factor for factor in GenBBS.big + GenBBS.small if factor not in factors]
+        possible_factors = [factor for factor in GenBBS.primes if factor not in factors]
 
         x = 1
         for idx in range(2):
@@ -63,13 +63,9 @@ class GenBBS(Gen):
         Gen.print_genned_param(name, x)
         return x
 
-    # small и big - числа сравнимые с 3 по модулю 4
-    small = [3, 7, 11, 19, 23, 31, 43, 47, 59, 67, 71, 79, 83, 103, 107, 127, 131, 139, 151, 163, 167, 179, 191, 199,
-             211, 223, 227, 239, 251, 263, 271, 283, 307, 311, 331, 347, 359, 367, 379, 383, 419, 431, 439, 443, 463,
-             467, 479, 487, 491, 499, 503, 523, 547, 563, 571, 587, 599, 607, 619, 631, 643, 647, 659, 683, 691, 719,
-             727, 739, 743, 751, 787, 811, 823, 827, 839, 859, 863, 883, 887, 907, 911, 919, 947, 967, 971, 983, 991]
-
-    big = [15486671, 94244707, 238471, 103591, 389171, 152879, 11240783, 9833647, 11241023, 939823]
+    # простые числа, сравнимые с 3 по модулю 4
+    primes = [859, 863, 883, 887, 907, 911, 919, 947, 967, 971, 983, 991, 15486671,
+              94244707, 238471, 103591, 389171, 152879, 11240783, 9833647, 11241023, 939823]
 
     @staticmethod
     def usage():

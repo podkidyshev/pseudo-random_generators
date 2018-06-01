@@ -30,14 +30,16 @@ def stats(prs, args):
     plt.plot(means, 'ro')
     plt.ylabel('Значения мат. ожидания')
     plt.xlabel('Размеры выборок {}'.format(', '.join(map(str, counts))))
-    figure.savefig(os.path.dirname(args.fout) + '\\means.png')
+    plt.axhline(mean_true)
+    figure.savefig(os.path.dirname(os.path.abspath(args.fout)) + '\\means.png')
 
-    plt.figure()
+    figure = plt.figure()
     plt.title('Зависимость среднеквадрат. отклонения от объёма выборки')
     plt.plot(stds, 'ro')
     plt.ylabel('Значения среднеквадрат. отклонения')
     plt.xlabel('Размеры выборок {}'.format(', '.join(map(str, counts))))
-    figure.savefig(os.path.dirname(args.fout) + '\\stds.png')
+    plt.axhline(std_true)
+    figure.savefig(os.path.dirname(os.path.abspath(args.fout)) + '\\stds.png')
 
     sample = 1000
     sample_idx = counts.index(sample)

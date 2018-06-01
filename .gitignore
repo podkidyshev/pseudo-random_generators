@@ -1,6 +1,6 @@
 #MY OWN EXCLUDES
 *.exe
-release/
+release/*
 release
 .idea
 analysis

@@ -76,6 +76,6 @@ class LFSR:
     # Костыль
     class DummyParams:
         def __init__(self, p, a, seed):
-            self.g_p = p
+            self.p = p
             self.a = a
             self.i = [seed]

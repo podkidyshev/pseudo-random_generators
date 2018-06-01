@@ -12,8 +12,8 @@ class GenRSA(Gen):
         # ассерты
         Gen.assert_len(params.i, 1, GenRSA.NAME)
         # основные параметры
-        self.p = Gen.get(params, 'p', GenRSA.gen_prime, 'p', GenRSA.big)
-        self.q = Gen.get(params, 'q', GenRSA.gen_prime, 'q', GenRSA.small)
+        self.p = Gen.get(params, 'p', GenRSA.gen_prime, 'p')
+        self.q = Gen.get(params, 'q', GenRSA.gen_prime, 'q')
         self.n = Gen.get(params, 'rsa_n', self.gen_n)
         self.e = Gen.get(params, 'rsa_e', self.gen_e)
         self.w = Gen.get(params, 'w', Gen.default, DEFAULT_W, 'w')
@@ -57,10 +57,10 @@ class GenRSA(Gen):
         assert gcd(e, (p - 1) * (q - 1)) == 1, 'rsa_e и (p - 1)(q - 1) должны быть взаимно простыми'
 
     @staticmethod
-    def gen_prime(name, primes):
-        prime = random.choice(primes)
-        Gen.print_genned_param(name, prime)
-        return prime
+    def gen_prime(name):
+        value = random.choice(GenRSA.primes)
+        Gen.print_genned_param(name, value)
+        return value
 
     @staticmethod
     def gen_relatively_prime(f, name):
@@ -71,7 +71,7 @@ class GenRSA(Gen):
     @staticmethod
     def _gen_relatively_prime(f):
         factors = set(factorint(f).keys())
-        possible_factors = [factor for factor in GenRSA.big + GenRSA.small if factor < f and factor not in factors]
+        possible_factors = [factor for factor in GenRSA.primes if factor < f and factor not in factors]
         if not possible_factors:
             return f - 1
 
@@ -83,13 +83,8 @@ class GenRSA(Gen):
             e *= next_prime
         return e
 
-    small = [3, 7, 11, 19, 23, 31, 43, 47, 59, 67, 71, 79, 83, 103, 107, 127, 131, 139, 151, 163, 167, 179, 191, 199,
-             211, 223, 227, 239, 251, 263, 271, 283, 307, 311, 331, 347, 359, 367, 379, 383, 419, 431, 439, 443, 463,
-             467, 479, 487, 491, 499, 503, 523, 547, 563, 571, 587, 599, 607, 619, 631, 643, 647, 659, 683, 691, 719,
-             727, 739, 743, 751, 787, 811, 823, 827, 839, 859, 863, 883, 887, 907, 911, 919, 947, 967, 971, 983, 991]
-
-    big = [104933, 15486671, 15490781, 15495749, 179426549, 552301, 94244707, 11303401, 238471, 80713, 53993,
-           103591, 15401, 389171, 152879, 225949, 6528793, 1377653, 11240783, 9833647, 11241023, 939823]
+    primes = [104933, 15486671, 15490781, 15495749, 179426549, 552301, 94244707, 11303401, 238471, 80713, 53993,
+              103591, 15401, 389171, 152879, 225949, 6528793, 1377653, 11240783, 9833647, 11241023, 939823]
 
     @staticmethod
     def usage():

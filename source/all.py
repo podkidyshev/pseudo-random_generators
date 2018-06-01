@@ -13,8 +13,8 @@ def main():
     else:
         for gen in GENS:
             os.system('mkdir .\\analysis\\{0}'.format(gen))
-            os.system('gen.exe /g:{0} /fout:.\\analysis\\{0}\\gen_{0}.txt /f:.\\analysis\\{0}\\rnd_{0}.dat'.format(gen))
-            os.system('analysis.exe /f:.\\analysis\\{0}\\rnd_{0}.dat /fout:.\\analysis\\{0}\\report_{0}.txt'.format(gen))
+            os.system('gen.exe /g:{0} /fout:.\\analysis\\{0}\\gen.txt /f:.\\analysis\\{0}\\rnd.dat'.format(gen))
+            os.system('analysis.exe /f:.\\analysis\\{0}\\rnd.dat /fout:.\\analysis\\{0}\\report.txt'.format(gen))
 
 
 if __name__ == '__main__':
