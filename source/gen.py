@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 import argparse
@@ -6,7 +7,7 @@ import utils
 import utils.launch_gen as launch
 
 DEFAULT_LEN = 10000
-DEFAULT_VALUES_MODULO = 1048576
+DEFAULT_VALUES_MODULO = 1000
 
 
 def init_args(parser, args):
@@ -25,6 +26,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     init_args(parser, args)
     parser.add_argument('--f', help='Имя выходного файла с ПСП')
+    parser.add_argument('--fout', default=None, help='Файл с отчётом')
     parser.add_argument('--gui', action='store_true')
     # Парсинг
     args_parsed = parser.parse_args(args)
@@ -38,11 +40,21 @@ def generate(args):
         sys.exit(0)
 
     print('INFO: Инициализация')
+
+    if args.fout:
+        orig_stdout = sys.stdout
+        f = open(os.path.abspath(args.fout), 'w')
+        sys.stdout = f
+
     gen = launch.GENS_DICT[args.g](args)
+
+    if args.fout:
+        sys.stdout = orig_stdout
+        f.close()
 
     print('INFO: Будет сгенерировано {} чисел'.format(args.n))
     time_start = time.time()
-    values = [next(gen) % DEFAULT_VALUES_MODULO for _idx in range(args.n)]
+    values = [next(gen) % (DEFAULT_VALUES_MODULO + 1) for _idx in range(args.n)]
     time_elapsed = int((time.time() - time_start) * 1000)  # из секунд в милисекунды
 
     print('INFO: Генарация заняла {} милисекунд'.format(time_elapsed))

@@ -1,3 +1,4 @@
+import os
 from numpy import mean, std
 import matplotlib.pyplot as plt
 
@@ -18,7 +19,7 @@ def stats(prs, args):
     print('Мат. ожидание выборки = {:.4f}'.format(mx))
     print('Среднеквадрат. отклонение выборки = {:.4f}\n'.format(sx))
 
-    counts = [100, 1000, 3000, 7000, 10000]
+    counts = [100, 500, 1000, 5000, 10000]
     means = [mean(prs[:c]) for c in counts]
     stds = [std(prs[:c]) ** 2 for c in counts]
     for c, m, s in zip(counts, means, stds):
@@ -29,14 +30,14 @@ def stats(prs, args):
     plt.plot(means, 'ro')
     plt.ylabel('Значения мат. ожидания')
     plt.xlabel('Размеры выборок {}'.format(', '.join(map(str, counts))))
-    figure.savefig(get_fname(args) + '_means.png')
+    figure.savefig(os.path.dirname(args.fout) + '\\means.png')
 
     plt.figure()
     plt.title('Зависимость среднеквадрат. отклонения от объёма выборки')
     plt.plot(stds, 'ro')
     plt.ylabel('Значения среднеквадрат. отклонения')
     plt.xlabel('Размеры выборок {}'.format(', '.join(map(str, counts))))
-    figure.savefig(get_fname(args) + '_stds.png')
+    figure.savefig(os.path.dirname(args.fout) + '\\stds.png')
 
     sample = 1000
     sample_idx = counts.index(sample)
@@ -48,8 +49,3 @@ def stats(prs, args):
     print('Для среднеквадрат. отклонения = {0:.4f}%'.format(std_dev))
     print(utils.SEPARATOR)
     print(utils.SEPARATOR)
-
-
-def get_fname(args):
-    name = args.fout
-    return name[:name.rfind('.')] if '.' in name else name

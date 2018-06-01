@@ -1,4 +1,3 @@
-import distributions
 import criteria.chi2 as chi2
 
 

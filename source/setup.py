@@ -7,7 +7,8 @@ os.environ['TK_LIBRARY'] = 'C:/Programs/Python36/tcl/tk8.6'
 executables = [
 	Executable("dist.py", targetName="dist.exe"), 
 	Executable("gen.py", targetName="gen.exe"), 
-	Executable("analysis.py", targetName="analysis.exe")
+	Executable("analysis.py", targetName="analysis.exe"),
+    Executable("analyse_all.py", targetName="analyse_all.exe")
 ]
 
 buildOptions = dict(

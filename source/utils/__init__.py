@@ -41,7 +41,7 @@ def get_args():
     args = sys.argv[1:]
     for idx, arg in enumerate(args):
         if '/' in arg:
-            arg = arg.replace('/', '--')
+            arg = arg.replace('/', '--', 1)
             if ':' in arg:
                 args.insert(idx + 1, arg[arg.index(':') + 1:])
                 arg = arg[:arg.index(':')]

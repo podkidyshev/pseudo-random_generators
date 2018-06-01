@@ -6,6 +6,19 @@ import utils.launch_dist as launch_dist
 import dist
 import stats
 
+import criteria.chi2 as chi2
+import criteria.serial as serial
+import criteria.intervals as intervals
+import criteria.splitting as splitting
+import criteria.permutations as permutations
+import criteria.run as run
+import criteria.conflicts as conflicts
+
+CRITERIAS = [
+    chi2.chi2, serial.serial, intervals.intervals, splitting.splitting,
+    permutations.permutations, run.run_1, run.run_2, conflicts.conflicts
+]
+
 
 def parse_args():
     args = utils.get_args()
@@ -38,21 +51,8 @@ def main():
     old_separator = utils.SEPARATOR
     utils.SEPARATOR = old_separator + '\n' + old_separator
 
-    import criteria.chi2 as chi2
-    import criteria.serial as serial
-    import criteria.intervals as intervals
-    import criteria.splitting as splitting
-    import criteria.permutations as permutations
-    import criteria.run as run
-    import criteria.conflicts as conflicts
-
-    criterias = [
-        chi2.chi2, serial.serial, intervals.intervals, splitting.splitting,
-        permutations.permutations, run.run_1, run.run_2, conflicts.conflicts
-    ]
-
-    for crit in criterias:
-        crit(prs_st if crit != conflicts.conflicts else prs)  # критерий конфликтов запустим на исходной ПСП
+    for crit in CRITERIAS:
+        crit(prs_st)  # критерий конфликтов запустим на исходной ПСП
         print(utils.SEPARATOR)
 
     utils.SEPARATOR = old_separator
