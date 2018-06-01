@@ -7,15 +7,20 @@ import utils
 def stats(prs, args):
     print('INFO: СТАТИСТИКА\n')
 
-    mx = mymean(prs)
-    sx = mystd(prs)
+    mean_true = 0.5
+    std_true = 1 / 12
+    print('Истинное мат. ожидание = {:.4f}'.format(mean_true))
+    print('Истинное среднеквадрат. отклонение = {:.4f}\n'.format(std_true))
 
-    print('Математическое ожидание = {:.4f}'.format(mx))
-    print('Среднеквадратическое отклонение = {:.4f}'.format(sx))
+    mx = mean(prs)
+    sx = std(prs) ** 2
+    print('Принята выборка длиной {}'.format(len(prs)))
+    print('Мат. ожидание выборки = {:.4f}'.format(mx))
+    print('Среднеквадрат. отклонение выборки = {:.4f}\n'.format(sx))
 
     counts = [100, 1000, 3000, 7000, 10000]
-    means = [mymean(prs[:c]) for c in counts]
-    stds = [mystd(prs[:c]) for c in counts]
+    means = [mean(prs[:c]) for c in counts]
+    stds = [std(prs[:c]) ** 2 for c in counts]
     for c, m, s in zip(counts, means, stds):
         print('Для выборки из {:>5d} чисел: m = {:.4f}, std = {:.4f}'.format(c, m, s))
 
@@ -33,26 +38,16 @@ def stats(prs, args):
     plt.xlabel('Размеры выборок {}'.format(', '.join(map(str, counts))))
     figure.savefig(get_fname(args) + '_stds.png')
 
-    sample = 100
+    sample = 1000
     sample_idx = counts.index(sample)
-    mean_true = 0.5
-    std_true = 1 / 12
     mean_dev = abs(means[sample_idx] - mean_true) / means[sample_idx] * 100
     std_dev = abs(stds[sample_idx] - std_true) / stds[sample_idx]
 
-    print('\nОтносительные погрешности для выборки размером {}'.format(sample))
+    print('\nОтносительные погрешности для выборки размером {}:'.format(sample))
     print('Для мат. ожидания = {0:.2f}%'.format(mean_dev))
     print('Для среднеквадрат. отклонения = {0:.4f}%'.format(std_dev))
     print(utils.SEPARATOR)
     print(utils.SEPARATOR)
-
-
-def mymean(prs):
-    return mean(prs)
-
-
-def mystd(prs):
-    return std(prs) ** 2
 
 
 def get_fname(args):
