@@ -6,12 +6,11 @@ class GenRC4(Gen):
     PARAMS = []
 
     def __init__(self, params):
-        # ассерты
-        Gen.assert_ilen(params.i, 1, GenRC4.NAME)
+        Gen.assert_len(params.i, 1, GenRC4.NAME)
         # основные параметры
         # инициализационный вектор
         mask = (2 ** 256) - 1
-        self.key = Gen.get_iarg(params, 0, Gen.gen_param, (0, mask), 'key') & mask
+        self.key = Gen.getv(params, 0, Gen.gen_param, (0, mask), 'key') & mask
 
         self.S = [idx for idx in range(256)]
 
@@ -39,6 +38,6 @@ class GenRC4(Gen):
     def usage():
         usage = """
 Инициализационный вектор:
-key - ключ шифрования, будут использованы первые 256 битов
+i[0] - ключ, будут использованы первые 256 битов
 """
         print(usage)

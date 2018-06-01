@@ -99,9 +99,10 @@ def usage(args):
     # Проверяем корректность аргумента
     if dist_name not in DISTS_DICT.keys():
         print('ERR: Неизвестное значение /h выберите одно из: {}'.format(', '.join(DISTS_DICT.keys())))
-        sys.exit(0)
+        sys.exit(0xE)
+
     # Выводим хелп для конкретного распределения
     dist_class = DISTS_DICT[dist_name]
-    print("Описание параметров распределения {} ({}):".format(dist_name, dist_class.NAME))
+    print("Описание параметров распределения {} ({}):".format(dist_name, dist_class.NAME), end='')
     dist_class.usage()
     sys.exit(0)

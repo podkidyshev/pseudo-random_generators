@@ -5,27 +5,26 @@ from generators import *
 
 
 class GenRSA(Gen):
-    """/rsa_n:61849 /rsa_e:929"""
     NAME = 'RSA'
     PARAMS = ['p', 'q', 'rsa_e', 'rsa_n', 'w']
 
     def __init__(self, params):
         # ассерты
-        Gen.assert_ilen(params.i, 1, GenRSA.NAME)
+        Gen.assert_len(params.i, 1, GenRSA.NAME)
         # основные параметры
-        self.p = Gen.get_arg(params, 'p', GenRSA.gen_prime, 'p', GenRSA.big)
-        self.q = Gen.get_arg(params, 'q', GenRSA.gen_prime, 'q', GenRSA.small)
-        self.n = Gen.get_arg(params, 'rsa_n', self.gen_n)
-        self.e = Gen.get_arg(params, 'rsa_e', self.gen_e)
-        self.w = Gen.get_arg(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
+        self.p = Gen.get(params, 'p', GenRSA.gen_prime, 'p', GenRSA.big)
+        self.q = Gen.get(params, 'q', GenRSA.gen_prime, 'q', GenRSA.small)
+        self.n = Gen.get(params, 'rsa_n', self.gen_n)
+        self.e = Gen.get(params, 'rsa_e', self.gen_e)
+        self.w = Gen.get(params, 'w', Gen.default, DEFAULT_W, 'w')
         # ассерты
-        assert 1 <= self.w, 'ограничение 1 <= w'
-        assert isprime(self.p), 'p должно быть простым положительным числом'
-        assert isprime(self.q), 'q должно быть простым положительным числом'
+        assert 1 <= self.w, 'Длина выходного слова должна быть 0 < w'
+        assert self.p > 0 and isprime(self.p), 'p должно быть простым положительным числом'
+        assert self.q > 0 and isprime(self.q), 'q должно быть простым положительным числом'
         self.p, self.q = GenRSA.assert_n(self.n)
         GenRSA.assert_e(self.p, self.q, self.e)
         # инициализационный вектор
-        self.x0 = Gen.get_iarg(params, 0, Gen.gen_param, (1, self.n - 1), 'x0') % self.n
+        self.x0 = Gen.getv(params, 0, Gen.gen_param, (1, self.n - 1), 'x0') % self.n
 
         super().__init__()
 
@@ -50,13 +49,12 @@ class GenRSA(Gen):
     def assert_n(n):
         factors = tuple(factorint(n).keys())
         assert len(factors) == 2, 'rsa_n должно быть произведением двух простых чисел'
-        assert isprime(factors[0]) and isprime(factors[1]), 'множители n должны быть простыми: {} и {}'.format(*factors)
-        return factors[0], factors[1]
+        return factors
 
     @staticmethod
     def assert_e(p, q, e):
-        assert e < (p - 1) * (q - 1), 'e должно быть строго меньше (p - 1)(q - 1)'
-        assert gcd(e, (p - 1) * (q - 1)) == 1, 'e и (p - 1)(q - 1) должны быть взаимно простыми'
+        assert e < (p - 1) * (q - 1), 'rsa_e должно быть строго меньше (p - 1)(q - 1)'
+        assert gcd(e, (p - 1) * (q - 1)) == 1, 'rsa_e и (p - 1)(q - 1) должны быть взаимно простыми'
 
     @staticmethod
     def gen_prime(name, primes):
@@ -96,14 +94,12 @@ class GenRSA(Gen):
     @staticmethod
     def usage():
         usage = """
-p и q - простые числа
-w - длина генерируемых бинарных слов - целое положительное число
+p и q - простые положительные числа
+w - длина генерируемых двоичных слов > 0
 rsa_n - произведение двух простых чисел
-rsa_e - взаимно простое число с (p - 1)(q - 1), где rsa_n = p * q
+rsa_e - взаимно простое с и меньше (p - 1)(q - 1), где rsa_n = p * q
 
 Инициализационный вектор:
-
-x0 - начальное состояние
-x0 будет автоматически взят по модулю rsa_n
+i[0] - начальное состояние, будет автоматически взят по модулю rsa_n
 """
         print(usage)

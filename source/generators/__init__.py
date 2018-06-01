@@ -2,9 +2,9 @@ import random
 
 import utils
 
-DEFAULT_M = (1000, 1000000)
+DEFAULT_M = (10000, 1000000)
 DEFAULT_P = (10, 32)
-DEFAULT_W = (10, 32)
+DEFAULT_W = 10
 
 
 class Gen:
@@ -46,19 +46,24 @@ class Gen:
         Gen.print_genned_param(name, param)
         return param
 
+    @staticmethod
+    def default(value, name):
+        print('Параметр {} взят по умолчанию = {}'.format(name, value))
+        return value
+
     def assert_attrs_modulo(self, attr_check, attr_modulo):
         assert getattr(self, attr_check) < getattr(self, attr_modulo), '{} = {} больше модуля {} = {}'\
             .format(attr_check, getattr(self, attr_check), attr_modulo, getattr(self, attr_modulo))
 
     @staticmethod
-    def assert_ilen(i, l, name):
+    def assert_len(i, l, name):
         assert i is None or len(i) == l, 'Инициализационный вектор для {} должен содержать {} элементов'.format(name, l)
 
     @staticmethod
-    def get_arg(params, param, gen_func, *gen_func_params):
+    def get(params, param, gen_func, *gen_func_params):
         value = getattr(params, param)
-        return int(value) if value is not None else gen_func(*gen_func_params)
+        return value if value is not None else gen_func(*gen_func_params)
 
     @staticmethod
-    def get_iarg(params, idx, gen_func, *gen_func_params):
+    def getv(params, idx, gen_func, *gen_func_params):
         return int(params.i[idx]) if params.i else gen_func(*gen_func_params)

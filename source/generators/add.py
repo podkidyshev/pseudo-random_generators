@@ -6,13 +6,15 @@ class GenAdd(Gen):
     PARAMS = ['m']
 
     def __init__(self, params):
-        Gen.assert_ilen(params.i, 2, GenAdd.NAME)
+        # ассерты
+        Gen.assert_len(params.i, 2, GenAdd.NAME)
         # Основные параметры
-        self.m = Gen.get_arg(params, 'm', Gen.gen_param, DEFAULT_M, 'm')
+        self.m = Gen.get(params, 'm', Gen.gen_param, DEFAULT_M, 'm')
+        # ассерты
         assert self.m >= 2, 'Модуль должен быть >= 2'
         # Инициализационный вектор
-        self.x0 = Gen.get_iarg(params, 0, Gen.gen_param, (0, self.m), 'x0') % self.m
-        self.x1 = Gen.get_iarg(params, 1, Gen.gen_param, (0, self.m), 'x1') % self.m
+        self.x0 = Gen.getv(params, 0, Gen.gen_param, (0, self.m), 'x0') % self.m
+        self.x1 = Gen.getv(params, 1, Gen.gen_param, (0, self.m), 'x1') % self.m
 
         super().__init__()
 
@@ -23,13 +25,11 @@ class GenAdd(Gen):
     @staticmethod
     def usage():
         usage = """
-m - модуль
-2 <= m
+m - модуль >= 2
 
 Инициализационный вектор:
-
-0 <= i(0) < m
-0 <= i(1) < m
-Введённые значения i(0) и i(1) будут взяты по модулю m автоматически
+0 <= i[0] < m
+0 <= i[1] < m
+Введённые значения i[0] и i[1] будут взяты по модулю m автоматически
 """
         print(usage)

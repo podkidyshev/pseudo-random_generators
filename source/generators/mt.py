@@ -16,17 +16,18 @@ class GenMT(Gen):
     l = 18
     b = 2636928640
     c = 4022730752
-    f = 1812433253
+    f = 1812433253  # f для версии генератора MT19937 (в том же разделе Algorithmic detail -> Initialization)
 
     def __init__(self, params):
         self.mask_all = (1 << GenMT.w) - 1
         self.mask_first = (1 << GenMT.r) - 1
         self.mask_last = self.mask_all - self.mask_first
         # ассерты
-        Gen.assert_ilen(params.i, 1, GenMT.NAME)
+        Gen.assert_len(params.i, 1, GenMT.NAME)
         # инициализационный вектор
-        self.seed = Gen.get_iarg(params, 0, Gen.gen_param, (0, (2 ** GenMT.w) - 1), 'seed') & self.mask_all
+        self.seed = Gen.getv(params, 0, Gen.gen_param, (0, (2 ** GenMT.w) - 1), 'seed') & self.mask_all
 
+        # Инициализация взята из https://en.wikipedia.org/wiki/Mersenne_Twister -> Algorithmic detail -> Initialization
         self.a = [0] * GenMT.p
         self.a[0] = self.seed
         for i in range(1, GenMT.p):
@@ -60,8 +61,7 @@ class GenMT(Gen):
     def usage():
         usage = """
 Инициализационный вектор:
-
-seed - начальное состояние генератора (полином над GF2)
-От введенного состояния seed будут использованы первые 32 бита
+i[0] - начальное состояние генератора (полином над GF2)
+От введенного состояния i[0] будут использованы первые 32 бита
 """
         print(usage)

@@ -1,4 +1,6 @@
-from sympy.ntheory import factorint, isprime
+from functools import reduce
+from itertools import combinations_with_replacement
+from sympy.ntheory import factorint
 from math import gcd
 
 from generators import *
@@ -10,21 +12,20 @@ class GenBBS(Gen):
 
     def __init__(self, params):
         # ассерты
-        Gen.assert_ilen(params.i, 0, GenBBS.NAME)
+        Gen.assert_len(params.i, 1, GenBBS.NAME)
         # основные параметры
-        self.p = Gen.get_arg(params, 'p', GenBBS.gen_blum_factor, 'p', GenBBS.big)
-        self.q = Gen.get_arg(params, 'q', GenBBS.gen_blum_factor, 'q', GenBBS.small)
-        self.n = Gen.get_arg(params, 'bbs_n', lambda: self.p * self.q)
-
-        self.w = Gen.get_arg(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
+        self.p = Gen.get(params, 'p', GenBBS.gen_blum_factor, 'p', GenBBS.big)
+        self.q = Gen.get(params, 'q', GenBBS.gen_blum_factor, 'q', GenBBS.small)
+        self.n = Gen.get(params, 'bbs_n', lambda: self.p * self.q)
+        self.w = Gen.get(params, 'w', Gen.default, DEFAULT_W, 'w')
         # ассерты
-        assert 1 <= self.w, 'ограничение 1 <= w'
-        assert isprime(self.p) and self.p % 4 == 3, 'p не простое или % 3 != 4'
-        assert isprime(self.q) and self.q % 4 == 3, 'q не простое или % 3 != 4'
-        self.p, self.q = GenBBS.check_n(self.n)
+        assert 1 <= self.w, 'Длина выходного слова должна быть > 0'
+        assert self.p % 4 == 3, 'p % 3 == 4'
+        assert self.q % 4 == 3, 'q % 3 == 4'
+        GenBBS.check(self.n)
         # инициализационный вектор
-        self.x = Gen.get_iarg(params, 0, GenBBS.gen_relatively_prime, self.n, 'x')
-        assert gcd(self.n, self.x) == 1, 'bbs_n = {} и x = {} должны быть взаимно простыми'.format(self.n, self.x)
+        self.x = Gen.getv(params, 0, GenBBS.gen_relatively_prime, self.n, 'x')
+        assert gcd(self.n, self.x) == 1, 'bbs_n = {} и i[0] = {} должны быть взаимно простыми'.format(self.n, self.x)
         self.x0 = pow(self.x, 2, self.n)
 
         super().__init__()
@@ -44,12 +45,11 @@ class GenBBS(Gen):
         return res
 
     @staticmethod
-    def check_n(n):
-        factors = tuple(factorint(n).keys())
-        assert len(factors) == 2, 'rsa_n должно быть произведением двух простых чисел'
-        assert isprime(factors[0]) and isprime(factors[1]), 'множители n должны быть простыми: {} и {}'.format(*factors)
-        assert factors[0] % 4 == 3 and factors[1] % 4 == 3, 'один из сомножителей bbs_n - не число Блюма'
-        return factors[0], factors[1]
+    def check(blum):
+        factors = list(factorint(blum).keys())
+        assert len(factors) == 2, 'Число bbs_n должно быть произведением двух простых чисел % 4 == 3'
+        assert factors[0] % 4 == 3, 'Число bbs_n должно быть произведением двух простых чисел % 4 == 3'
+        assert factors[1] % 4 == 3, 'Число bbs_n должно быть произведением двух простых чисел % 4 == 3'
 
     @staticmethod
     def gen_relatively_prime(f, name):
@@ -63,6 +63,7 @@ class GenBBS(Gen):
         Gen.print_genned_param(name, x)
         return x
 
+    # small и big - числа сравнимые с 3 по модулю 4
     small = [3, 7, 11, 19, 23, 31, 43, 47, 59, 67, 71, 79, 83, 103, 107, 127, 131, 139, 151, 163, 167, 179, 191, 199,
              211, 223, 227, 239, 251, 263, 271, 283, 307, 311, 331, 347, 359, 367, 379, 383, 419, 431, 439, 443, 463,
              467, 479, 487, 491, 499, 503, 523, 547, 563, 571, 587, 599, 607, 619, 631, 643, 647, 659, 683, 691, 719,
@@ -73,12 +74,11 @@ class GenBBS(Gen):
     @staticmethod
     def usage():
         usage = """
-w - длина выходного слова - > 0
-p и q - целые числа Блюма (простые числа с % 3 == 4)
-bbs_n - произведение двух чисел Блюма
+w - длина выходного слова > 0
+p и q - целые числа % 4 == 3
+bbs_n - число Блюма - будет использовано, даже если переданы p и q
 
 Инициализационный вектор:
-
-x - число, взаимно-простое с bbs_n
+i[0] - число, взаимно-простое с bbs_n=p*q
 """
         print(usage)

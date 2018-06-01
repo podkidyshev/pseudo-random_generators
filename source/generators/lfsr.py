@@ -3,15 +3,16 @@ from generators import *
 
 class GenLFSR(Gen):
     NAME = 'Регистр сдвига с обратной связью (РСЛОС)'
-    PARAMS = ['g_p', 'a', 'w']
+    PARAMS = ['p', 'a', 'w']
 
     def __init__(self, params):
         # ассерты
-        Gen.assert_ilen(params.i, 1, GenLFSR.NAME)
+        Gen.assert_len(params.i, 1, GenLFSR.NAME)
         # параметры
         self.lfsr = LFSR(params)
-        self.w = Gen.get_arg(params, 'w', Gen.gen_param, DEFAULT_W, 'w')
-        assert self.w > 0, 'длина выходного слова должна быть целым положительным числом'
+        self.w = Gen.get(params, 'w', Gen.default, DEFAULT_W, 'w')
+        # ассерты
+        assert self.w > 0, 'Длина выходного слова должна быть > 0'
 
         super().__init__()
 
@@ -21,15 +22,14 @@ class GenLFSR(Gen):
     @staticmethod
     def usage():
         usage = """
-w - длина выходного слова - > 0
-p - длина регистра в битах - > 0
+w - длина выходного слова > 0
+p - длина регистра в битах > 0
 a - полином над GF(2) степени p-1
-От введенного полинома а будут использованы первые p-1 битов
+От введенного полинома а будут использованы первые p битов
 
 Инициализационный вектор:
-
-x - начальное состояние регистра (полином над GF(2))
-От введенного состояния х будут использованы первые p-1 битов
+i[0] - начальное состояние регистра (полином над GF(2))
+От введенного состояния i[0] будут использованы первые p битов
 """
         print(usage)
 
@@ -38,20 +38,20 @@ class LFSR:
     def __init__(self, params, idx=None):
         idx = idx if idx is not None else ''
 
-        p_name = 'g_p{}'.format(idx)
+        p_name = 'p{}'.format(idx)
         a_name = 'a{}'.format(idx)
         x_name = 'x{}'.format(idx)
 
-        self.p = Gen.get_arg(params, p_name, Gen.gen_param, DEFAULT_P, p_name)
-        assert self.p > 0, 'длина регистра должна быть целым положительным числом'
-        self.a = Gen.get_arg(params, a_name, self.choose_poly) & (2 ** self.p) - 1
-        self.x = Gen.get_iarg(params, 0, Gen.gen_param, (1, 2 ** self.p - 1), x_name) & (2 ** self.p) - 1
+        self.p = Gen.get(params, p_name, Gen.gen_param, DEFAULT_P, p_name)
+        assert self.p > 0, 'Длина регистра должна быть целым положительным числом'
+        self.a = Gen.get(params, a_name, self.choose_poly) & (2 ** self.p - 1)
+        self.x = Gen.getv(params, 0, Gen.gen_param, (1, 2 ** self.p - 1), x_name) & (2 ** self.p - 1)
 
     def __next__(self):
-        out_bit = self.x & 1
-        new_bit = bin(self.x & self.a).count('1') & 1
-        self.x >>= 1
-        self.x |= new_bit << (self.p - 1)
+        out_bit = self.x & 1                            # первый бит регистра
+        new_bit = bin(self.x & self.a).count('1') & 1   # умножаем полином на регистр, посчитываем число единиц mod 2
+        self.x >>= 1                                    # сдвигаем регистр (удаляем первый бит)
+        self.x |= new_bit << (self.p - 1)               # в конец регистра записываем новый бит
         return out_bit
 
     def choose_poly(self):
@@ -69,10 +69,11 @@ class LFSR:
             res += next(self)
         return res
 
-    polynomials = [0, 3, 7, 13, 25, 41, 97, 193, 369, 545, 1153, 2561, 7185, 14593, 28677, 49153,
+    polynomials = ['полином нулевой степени не определён',
+                   3, 7, 13, 25, 41, 97, 193, 369, 545, 1153, 2561, 7185, 14593, 28677, 49153,
                    106513, 147457, 264193, 933889, 1179649, 2621441, 6291457, 8650753, 29491201]
 
-    # Костыль 3
+    # Костыль
     class DummyParams:
         def __init__(self, p, a, seed):
             self.g_p = p

@@ -103,7 +103,7 @@ def usage(args):
 графика производится не будет (без ошибки))
 """.format(', '.join(GENS_DICT.keys()))
         print(s)
-        return
+        sys.exit(0)
 
     gen_name = args[args.index('--h') + 1]
     # Проверяем корректность аргумента
@@ -113,7 +113,7 @@ def usage(args):
 
     # Выводим хелп для конкретного генератора
     gen_class = GENS_DICT[gen_name]
-    print("Описание генератора {} ({}):".format(gen_name, gen_class.NAME))
-    print("Возможные параметры: {}".format(', '.join(gen_class.PARAMS)))
+    print("INFO: Описание генератора {} ({}):".format(gen_name, gen_class.NAME))
+    print("Возможные параметры: [{}]".format(', '.join(gen_class.PARAMS)), end='')
     GENS_DICT[gen_name].usage()
-    return
+    sys.exit(0)
