@@ -5,7 +5,7 @@ DEFAULT_CHI2_DEGREES_OF_FREEDOM = 5
 
 def chi2(prs):
     k = DEFAULT_CHI2_DEGREES_OF_FREEDOM
-    print('INFO: Критерий Хи-квадрат')
+    print('INFO: КРИТЕРИЙ Хи-квадрат\n')
     print('Число степеней свободы k = {}'.format(k))
     # a, b = 0, 1 - исследуем стандартное равномерное распределение
     ab = [(idx / k, (idx + 1) / k) for idx in range(k)]
@@ -50,8 +50,8 @@ def conclusion(chi, interval):
     print("Вычисленная статистика Хи2 - {}".format(chi))
     print("Доверительный интервал = {}".format(interval))
     if interval[0] <= chi <= interval[1]:
-        print("ИТОГ: Вычисленное значение принадлежит доверительному интервалу. ПСП равномерна ~U(0,1)")
+        print("ИТОГ: Вычисленное значение принадлежит доверительному интервалу. ППСЧ равномерна ~U(0,1)")
     elif interval[1] < chi:
-        print("ИТОГ: ПСП не равномерна")
+        print("ИТОГ: ППСЧ не равномерна")
     else:
         print('ИТОГ: ГПСЧ не случаен')

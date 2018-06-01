@@ -6,7 +6,7 @@ DEFAULT_T = 4
 
 
 def permutations(prs):
-    print('INFO: Критерий перестановок. По умолчанию t (размер групп) = 4')
+    print('INFO: КРИТЕРИЙ перестановок\n')
     t = DEFAULT_T
     ft = factorial(t)
     n_possible = len(prs) // t

@@ -2,7 +2,7 @@ import criteria.chi2 as chi2
 
 
 def intervals(prs):
-    print('INFO: Критерий интервалов. Проверка на "отклонение выше среднего" (a = 0, b = 0.5)')
+    print('INFO: КРИТЕРИЙ интервалов\n')
     a, b = 0, 0.5
 
     t = 5

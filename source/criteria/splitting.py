@@ -4,7 +4,7 @@ import criteria.chi2 as chi2
 
 
 def splitting(prs_orig):
-    print('INFO: Критерий разбиений (покер-критерий)')
+    print('INFO: КРИТЕРИЙ разбиений (покер-критерий)\n')
     # Приводим к дискретному распределению от 0 до <число различных карт - 1> = 12
     d = 13  # число различных карт
     prs = [floor(d * v) for v in prs_orig]
